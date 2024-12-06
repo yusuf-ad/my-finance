@@ -37,6 +37,9 @@ body {
     /* mycolors */
     --dark: 252 7% 13%;
     --light-beige: 30 36%, 96%;
+    --teal: 177 52% 32%;
+    --peach: 28 73% 81%;
+    --sky-blue: 190 52% 68%;
   }
   .dark {
     --background: 0 0% 3.9%;

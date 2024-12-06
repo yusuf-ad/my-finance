@@ -18,6 +18,9 @@ export default {
         },
         dark: "hsl(var(--dark))",
         lightBeige: "hsl(var(--light-beige))",
+        teal: "hsl(var(--teal))",
+        peach: "hsl(var(--peach))",
+        skyBlue: "hsl(var(--sky-blue))",
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

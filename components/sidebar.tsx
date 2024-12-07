@@ -1,8 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowFatLinesLeft } from "./icons";
+import {
+  ArrowFatLinesLeft,
+  ArrowsDownUp,
+  ChartDonut,
+  House,
+  Jar,
+  Receipt,
+} from "./icons";
 import clsx from "clsx";
+import NavLink from "./nav-link";
+
+const navLinks = [
+  {
+    href: "/",
+    link: "Overview",
+    icon: <House className="size-6" />,
+  },
+  {
+    href: "/transactions",
+    link: "Transactions",
+    icon: <ArrowsDownUp className="size-6" />,
+  },
+  {
+    href: "/budgets",
+    link: "Budgets",
+    icon: <ChartDonut className="size-6" />,
+  },
+  {
+    href: "/pots",
+    link: "Pots",
+    icon: <Jar className="size-6" />,
+  },
+  {
+    href: "/recurring-bills",
+    link: "Recurring Bills",
+    icon: <Receipt className="size-6" />,
+  },
+];
 
 function Sidebar() {
   const [isActive, setIsActive] = useState(true);
@@ -45,6 +81,14 @@ function Sidebar() {
           f
         </span>
       </p>
+
+      <nav className="mt-24">
+        <ul>
+          {navLinks.map((link) => (
+            <NavLink key={link.link} link={link} />
+          ))}
+        </ul>
+      </nav>
 
       <button
         onClick={handleToggle}

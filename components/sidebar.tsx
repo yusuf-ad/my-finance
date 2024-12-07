@@ -82,17 +82,16 @@ function Sidebar() {
         </span>
       </p>
 
-      <nav className="mt-24">
-        <ul>
-          {navLinks.map((link) => (
-            <NavLink key={link.link} link={link} />
-          ))}
-        </ul>
+      <nav className="mt-24 flex-grow">
+        {navLinks.map((link) => (
+          <NavLink key={link.link} link={link} isSidebarActive={isActive} />
+        ))}
       </nav>
 
       <button
+        type="button"
         onClick={handleToggle}
-        className="text-gray-400 items-center gap-2 px-8 mt-auto font-bold hover:text-white hidden lg:flex"
+        className="text-gray-400 items-center gap-2 px-8 mb-4 font-bold hover:text-white hidden lg:flex"
       >
         <span className="w-6 h-6 flex items-center justify-center">
           <ArrowFatLinesLeft />

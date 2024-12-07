@@ -5,7 +5,7 @@ function HomePage() {
     <div>
       <h1 className="text-gray-900 text-4xl font-bold">Overview</h1>
 
-      <div className="my-8 flex  justify-between gap-4">
+      <div className="my-8 flex flex-col lg:flex-row  justify-between gap-4">
         <div className="bg-dark text-white py-6 px-8 rounded-lg w-full">
           <h2 className="mb-3 text-sm">Current Balance</h2>
           <p className="text-3xl font-bold">$0.00</p>

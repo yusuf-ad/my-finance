@@ -102,7 +102,12 @@ function Sidebar() {
         onClick={handleToggle}
         className="text-gray-400 items-center gap-2 px-8 mb-4 font-bold hover:text-white hidden lg:flex"
       >
-        <span className="w-6 h-6 flex items-center justify-center">
+        <span
+          className={clsx(
+            "w-6 h-6 flex items-center justify-center transition-transform duration-500",
+            isActive ? "rotate-0" : "rotate-180"
+          )}
+        >
           <ArrowFatLinesLeft />
         </span>
         <span

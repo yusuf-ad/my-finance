@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${publicSans.className} antialiased flex flex-col lg:flex-row min-h-screen`}
+        className={`${publicSans.className} antialiased flex flex-col lg:flex-row`}
       >
         <Sidebar />
 
-        <div className="bg-lightBeige w-full">
+        <div className="min-h-screen bg-lightBeige w-full -order-1 lg:order-1">
           <div className="flex-1 p-10 max-w-screen-2xl mx-auto">{children}</div>
         </div>
       </body>

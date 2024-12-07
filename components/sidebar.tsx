@@ -11,6 +11,7 @@ import {
 } from "./icons";
 import clsx from "clsx";
 import NavLink from "./nav-link";
+import MobileNavLink from "./mobile-nav-link";
 
 const navLinks = [
   {
@@ -50,8 +51,8 @@ function Sidebar() {
   return (
     <div
       className={clsx(
-        "sticky bottom-0 lg:inset-0 h-24 bg-dark order-1 lg:-order-1 rounded-t-xl lg:rounded-r-xl lg:rounded-t-none lg:rounded-tr-xl py-10 flex flex-col lg:h-auto transition-all duration-500",
-        isActive ? "lg:max-w-80 lg:w-80" : "w-20"
+        "sticky bottom-0 lg:inset-0 bg-dark rounded-t-xl lg:rounded-r-xl lg:rounded-t-none lg:rounded-tr-xl pt-4 px-6 lg:px-0 lg:py-10 flex flex-col lg:h-auto transition-all duration-500",
+        isActive ? "lg:max-w-80 lg:w-80" : "lg:w-20"
       )}
     >
       <p
@@ -82,9 +83,17 @@ function Sidebar() {
         </span>
       </p>
 
-      <nav className="mt-24 flex-grow">
+      {/* desktop navbar */}
+      <nav className="mt-24 flex-grow hidden lg:block">
         {navLinks.map((link) => (
           <NavLink key={link.link} link={link} isSidebarActive={isActive} />
+        ))}
+      </nav>
+
+      {/* mobile navbar */}
+      <nav className="flex flex-grow lg:hidden">
+        {navLinks.map((link) => (
+          <MobileNavLink link={link} key={link.link} />
         ))}
       </nav>
 

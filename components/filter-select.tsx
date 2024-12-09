@@ -10,7 +10,7 @@ import {
 function FilterSelect({ options }: { options: string[] }) {
   return (
     <Select>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[164px]">
         <SelectValue placeholder={options[0]} />
       </SelectTrigger>
       <SelectContent>

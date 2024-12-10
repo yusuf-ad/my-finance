@@ -1,9 +1,9 @@
 import FilterSelect from "@/components/filter-select";
 import { CaretRight } from "@/components/icons";
+import TransactionsModal from "@/components/transactions-modal";
 import TransactionsTable from "@/components/transactions-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 
 function TransactionsPage() {
   return (
@@ -11,10 +11,7 @@ function TransactionsPage() {
       <header className="flex justify-between">
         <h1 className="text-gray-900 text-4xl font-bold">Transactions</h1>
 
-        <Button className="text-white py-6 font-bold">
-          <Plus />
-          Add New Transaction
-        </Button>
+        <TransactionsModal />
       </header>
 
       <section className="bg-white my-8 rounded-lg px-6 py-10 ">

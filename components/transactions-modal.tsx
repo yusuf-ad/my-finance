@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import { Input } from "./ui/input";
 import FilterSelect from "./filter-select";
 import { Checkbox } from "./ui/checkbox";
+import DatePicker from "./date-picker";
 
 function TransactionsModal() {
   return (
@@ -25,7 +26,7 @@ function TransactionsModal() {
           <DialogTitle>Add New Transaction</DialogTitle>
         </DialogHeader>
 
-        <form action="" className="flex flex-col gap-2">
+        <form action="" className="flex flex-col gap-3">
           <div className="space-y-2">
             <label htmlFor="name" className="text-gray-500 text-sm">
               Transaction Name
@@ -40,6 +41,14 @@ function TransactionsModal() {
             </p>
           </div>
 
+          <div className="space-y-2 flex flex-col">
+            <label htmlFor="date" className="text-gray-500 text-sm">
+              Transaction Date
+            </label>
+
+            <DatePicker />
+          </div>
+
           <div className="space-y-2">
             <label className="text-gray-500 text-sm">Category</label>
             <FilterSelect
@@ -52,7 +61,7 @@ function TransactionsModal() {
             <label htmlFor="amount" className="text-gray-500 text-sm">
               Amount
             </label>
-            <Input id="amount" type="text" placeholder="e.g. $1000" />
+            <Input id="amount" type="number" placeholder="e.g. $1000" />
           </div>
 
           <div className="flex items-center space-x-3 py-2">

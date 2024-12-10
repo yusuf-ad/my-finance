@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import BudgetsModal from "@/components/budgets-modal";
 
 function BudgetsPage() {
   return (
@@ -7,10 +6,7 @@ function BudgetsPage() {
       <header className="flex justify-between">
         <h1 className="text-gray-900 text-4xl font-bold">Budgets</h1>
 
-        <Button className="text-white py-6 font-bold">
-          <Plus />
-          Add New Budget
-        </Button>
+        <BudgetsModal />
       </header>
 
       <section>

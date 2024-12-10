@@ -10,15 +10,17 @@ import {
 function FilterSelect({
   options,
   triggerStyle,
+  placeholder,
 }: {
   options: string[];
   triggerStyle?: string;
   id?: string;
+  placeholder?: string;
 }) {
   return (
     <Select>
       <SelectTrigger className={`w-[164px] ${triggerStyle}`}>
-        <SelectValue placeholder={options[0]} />
+        <SelectValue placeholder={placeholder || options[0]} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

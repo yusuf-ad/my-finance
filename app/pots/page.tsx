@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import PotsModal from "@/components/pots-modal";
 
 function PotsPage() {
   return (
@@ -7,10 +6,7 @@ function PotsPage() {
       <header className="flex justify-between">
         <h1 className="text-gray-900 text-4xl font-bold">Pots</h1>
 
-        <Button className="text-white py-6 font-bold">
-          <Plus />
-          Add New Pot
-        </Button>
+        <PotsModal />
       </header>
 
       <section>

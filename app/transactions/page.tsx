@@ -4,8 +4,13 @@ import TransactionsModal from "@/components/transactions-modal";
 import TransactionsTable from "@/components/transactions-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getTransactions } from "@/server/actions/transaction";
 
-function TransactionsPage() {
+async function TransactionsPage() {
+  const data = await getTransactions();
+
+  console.log(data);
+
   return (
     <>
       <header className="flex justify-between">

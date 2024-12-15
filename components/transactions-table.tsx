@@ -2,20 +2,23 @@ import {
   Table,
   TableBody,
   TableCaption,
-  //   TableCell,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Transaction } from "@/server/actions/transaction";
 
-function TransactionsTable() {
+function TransactionsTable({ data }: { data: Transaction[] }) {
   return (
     <Table>
-      <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
-        No results.
-      </TableCaption>
+      {data.length === 0 && (
+        <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
+          No results.
+        </TableCaption>
+      )}
       <TableHeader>
-        <TableRow className="flex justify-between items-center">
+        <TableRow>
           <TableHead className="w-[100px]">Recipent/Sender</TableHead>
           <TableHead>Category</TableHead>
           <TableHead>Transaction Date</TableHead>
@@ -23,12 +26,16 @@ function TransactionsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {/* <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow> */}
+        {data.map((transaction) => (
+          <TableRow key={transaction.id}>
+            <TableCell className="w-[200px]">{transaction.name}</TableCell>
+            <TableCell>{transaction.category}</TableCell>
+            <TableCell>
+              {new Date(transaction.date).toLocaleDateString()}
+            </TableCell>
+            <TableCell className="text-right">{transaction.amount}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

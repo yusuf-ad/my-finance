@@ -9,8 +9,6 @@ import { getTransactions } from "@/server/actions/transaction";
 async function TransactionsPage() {
   const data = await getTransactions();
 
-  console.log(data);
-
   return (
     <>
       <header className="flex justify-between">
@@ -38,7 +36,7 @@ async function TransactionsPage() {
           </div>
         </div>
 
-        <TransactionsTable />
+        <TransactionsTable data={data} />
 
         <div className="flex justify-between mt-4">
           <Button

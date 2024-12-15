@@ -1,4 +1,4 @@
-import { integer, pgTable, date, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, date, varchar, boolean } from "drizzle-orm/pg-core";
 
 export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -6,4 +6,5 @@ export const transactionsTable = pgTable("transactions", {
   date: date().notNull(),
   category: varchar({ length: 255 }).notNull(),
   amount: integer().notNull(),
+  recurring: boolean().notNull(),
 });

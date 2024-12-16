@@ -13,10 +13,12 @@ export const Categories = [
   "General",
 ] as const;
 
-export const NewTransactionFormSchema = z.object({
+export const newTransactionSchema = z.object({
   name: z.string().min(1, { message: "Required" }).max(30),
   amount: z.number().min(1, { message: "Required" }),
   category: z.string().min(1, { message: "Required" }),
   date: z.date(),
   recurring: z.boolean(),
 });
+
+export type NewTransactionFormSchema = z.infer<typeof newTransactionSchema>;

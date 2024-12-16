@@ -21,7 +21,6 @@ import { Checkbox } from "./ui/checkbox";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Select,
   SelectContent,
@@ -37,14 +36,18 @@ import {
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Categories, NewTransactionFormSchema } from "@/lib/validations";
+import {
+  Categories,
+  newTransactionSchema,
+  NewTransactionFormSchema,
+} from "@/lib/validations";
 import clsx from "clsx";
 import { createTransaction } from "@/server/actions/transaction";
 import { toast } from "@/hooks/use-toast";
 
 function TransactionsModal() {
-  const form = useForm<z.infer<typeof NewTransactionFormSchema>>({
-    resolver: zodResolver(NewTransactionFormSchema),
+  const form = useForm<NewTransactionFormSchema>({
+    resolver: zodResolver(newTransactionSchema),
     defaultValues: {
       name: "",
       amount: 0,
@@ -54,7 +57,7 @@ function TransactionsModal() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof NewTransactionFormSchema>) {
+  async function onSubmit(values: NewTransactionFormSchema) {
     const res = await createTransaction({ ...values });
 
     if (res.success) {

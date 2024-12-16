@@ -3,7 +3,7 @@
 import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
-import { NewTransactionFormSchema } from "@/lib/validations";
+import { newTransactionSchema } from "@/lib/validations";
 
 export interface Transaction {
   id: number;
@@ -28,7 +28,7 @@ export const getTransactions = async (): Promise<Transaction[]> => {
 };
 
 export const createTransaction = async (transaction: NewTransaction) => {
-  const isValid = NewTransactionFormSchema.safeParse(transaction);
+  const isValid = newTransactionSchema.safeParse(transaction);
 
   if (!isValid.success) {
     return { success: false, message: "Invalid data" };

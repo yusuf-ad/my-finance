@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CalendarIcon, Plus } from "lucide-react";
+import { CalendarIcon, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -37,19 +37,13 @@ import {
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Categories } from "@/lib/validations";
-
-const TransactionSchema = z.object({
-  name: z.string().min(1).max(30),
-  amount: z.number().min(1),
-  category: z.string().min(1),
-  date: z.date(),
-  recurring: z.boolean(),
-});
+import { Categories, NewTransactionFormSchema } from "@/lib/validations";
+import clsx from "clsx";
+import { createTransaction } from "@/server/actions/transaction";
 
 function TransactionsModal() {
-  const form = useForm<z.infer<typeof TransactionSchema>>({
-    resolver: zodResolver(TransactionSchema),
+  const form = useForm<z.infer<typeof NewTransactionFormSchema>>({
+    resolver: zodResolver(NewTransactionFormSchema),
     defaultValues: {
       name: "",
       amount: 0,
@@ -59,10 +53,22 @@ function TransactionsModal() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof TransactionSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof NewTransactionFormSchema>) {
+    const res = await createTransaction({ ...values });
+
+    if (res.success) {
+      form.reset({
+        name: "",
+        amount: 0,
+        category: form.getValues("category"),
+        date: new Date(),
+        recurring: false,
+      });
+    }
+
+    if (!res.success) {
+      alert(res.message);
+    }
   }
 
   return (
@@ -88,11 +94,17 @@ function TransactionsModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <label htmlFor="name" className="text-gray-500 text-sm">
+                  <label
+                    htmlFor="name"
+                    className={clsx("text-gray-500 text-sm", {
+                      "text-red-500": form.formState.errors.name,
+                    })}
+                  >
                     Transaction Name
                   </label>
                   <FormControl>
                     <Input
+                      maxLength={30}
                       id="name"
                       placeholder="e.g. Urban Services Hub"
                       {...field}
@@ -100,7 +112,7 @@ function TransactionsModal() {
                   </FormControl>
                   <FormMessage />
                   <p className="text-right text-gray-500 text-sm">
-                    30 characters left
+                    {30 - field.value.length} characters left
                   </p>
                 </FormItem>
               )}
@@ -111,7 +123,12 @@ function TransactionsModal() {
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <label htmlFor="date" className="text-gray-500 text-sm">
+                  <label
+                    htmlFor="date"
+                    className={clsx("text-gray-500 text-sm", {
+                      "text-red-500": form.formState.errors.date,
+                    })}
+                  >
                     Transaction Date
                   </label>
 
@@ -139,9 +156,6 @@ function TransactionsModal() {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
                         initialFocus
                       />
                     </PopoverContent>
@@ -156,7 +170,14 @@ function TransactionsModal() {
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <label className="text-gray-500 text-sm">Category</label>
+                  <label
+                    htmlFor="category"
+                    className={clsx("text-gray-500 text-sm", {
+                      "text-red-500": form.formState.errors.category,
+                    })}
+                  >
+                    Category
+                  </label>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -184,7 +205,12 @@ function TransactionsModal() {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <label htmlFor="amount" className="text-gray-500 text-sm">
+                  <label
+                    htmlFor="amount"
+                    className={clsx("text-gray-500 text-sm", {
+                      "text-red-500": form.formState.errors.amount,
+                    })}
+                  >
                     Amount
                   </label>
                   <FormControl>
@@ -217,7 +243,9 @@ function TransactionsModal() {
                   <div className="flex items-center space-x-3 py-2">
                     <label
                       htmlFor="recurring"
-                      className="text-gray-500 text-sm select-none"
+                      className={clsx("text-gray-500 text-sm select-none", {
+                        "text-red-500": form.formState.errors.recurring,
+                      })}
                     >
                       Recurring
                     </label>
@@ -232,8 +260,19 @@ function TransactionsModal() {
               )}
             />
 
-            <Button className="w-full py-6 font-bold mt-6" type="submit">
-              Submit
+            <Button
+              disabled={form.formState.isSubmitting}
+              className="w-full py-6 font-bold mt-6"
+              type="submit"
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Submitting
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </Form>

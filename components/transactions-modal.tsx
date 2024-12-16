@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { Categories, NewTransactionFormSchema } from "@/lib/validations";
 import clsx from "clsx";
 import { createTransaction } from "@/server/actions/transaction";
+import { toast } from "@/hooks/use-toast";
 
 function TransactionsModal() {
   const form = useForm<z.infer<typeof NewTransactionFormSchema>>({
@@ -57,6 +58,10 @@ function TransactionsModal() {
     const res = await createTransaction({ ...values });
 
     if (res.success) {
+      toast({
+        title: "Success",
+        description: res.message,
+      });
       form.reset({
         name: "",
         amount: 0,
@@ -67,7 +72,11 @@ function TransactionsModal() {
     }
 
     if (!res.success) {
-      alert(res.message);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message,
+      });
     }
   }
 

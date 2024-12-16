@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 import { Public_Sans } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 
 const publicSans = Public_Sans({ subsets: ["latin"] });
 
@@ -23,9 +24,11 @@ export default function RootLayout({
       >
         <Sidebar />
 
-        <div className="min-h-screen bg-lightBeige w-full -order-1 lg:order-1">
+        <main className="min-h-screen bg-lightBeige w-full -order-1 lg:order-1">
           <div className="flex-1 p-10 max-w-screen-2xl mx-auto">{children}</div>
-        </div>
+        </main>
+
+        <Toaster />
       </body>
     </html>
   );

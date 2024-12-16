@@ -22,3 +22,10 @@ export const newTransactionSchema = z.object({
 });
 
 export type NewTransactionFormSchema = z.infer<typeof newTransactionSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export type LoginFormSchema = z.infer<typeof loginSchema>;

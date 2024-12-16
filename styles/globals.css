@@ -76,4 +76,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Hide default password visibility toggle button in Edge */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
+  }
 }

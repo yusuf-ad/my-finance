@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,9 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function LoginPage() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,15 +33,19 @@ function LoginPage() {
     console.log(data);
   }
 
+  function togglePasswordVisibility() {
+    setIsPasswordVisible((prev) => !prev);
+  }
+
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center min-h-screen">
       <div className="bg-white py-6 pb-0 px-6 max-w-lg w-[512px] rounded-lg">
-        <h1 className="text-gray-900 text-3xl font-bold mb-6">Login</h1>
+        <h1 className="text-gray-900 text-3xl font-bold mb-8">Login</h1>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-3"
+            className="flex flex-col gap-4"
           >
             <FormField
               control={form.control}
@@ -74,7 +82,21 @@ function LoginPage() {
                     Password
                   </label>
                   <FormControl>
-                    <Input id="password" placeholder="Password" {...field} />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={isPasswordVisible ? "text" : "password"}
+                        placeholder="Password"
+                        {...field}
+                      />
+                      <button
+                        onClick={togglePasswordVisibility}
+                        type="button"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-2"
+                      >
+                        <Eye />
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,10 +111,10 @@ function LoginPage() {
               {form.formState.isSubmitting ? (
                 <>
                   <Loader2 className="animate-spin" />
-                  Submitting
+                  Logging
                 </>
               ) : (
-                "Submit"
+                "Login"
               )}
             </Button>
           </form>
@@ -100,7 +122,7 @@ function LoginPage() {
 
         <Link
           href="/signup"
-          className="flex justify-center my-6 text-sm text-gray-500"
+          className="flex justify-center my-8 text-sm text-gray-500"
         >
           Need to create an account?{" "}
           <span className="ml-2 underline font-bold text-gray-900">

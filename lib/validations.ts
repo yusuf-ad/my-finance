@@ -25,7 +25,9 @@ export type NewTransactionFormSchema = z.infer<typeof newTransactionSchema>;
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
 });
 
 export type LoginFormSchema = z.infer<typeof loginSchema>;

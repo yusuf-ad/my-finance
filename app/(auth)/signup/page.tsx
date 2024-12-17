@@ -10,17 +10,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
 import { signUp } from "@/lib/auth-client";
 import { SignupFormSchema, signupSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function SignupPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const router = useRouter();
 
   const form = useForm<SignupFormSchema>({
     resolver: zodResolver(signupSchema),
@@ -32,22 +35,22 @@ function SignupPage() {
   });
 
   async function onSubmit(values: SignupFormSchema) {
-    const { data, error } = await signUp.email(
+    await signUp.email(
       {
         name: values.name,
         email: values.email,
         password: values.password,
       },
       {
-        onRequest: (ctx) => {
-          //show loading
-        },
         onSuccess: (ctx) => {
-          console.log(ctx.data);
-          //redirect to the dashboard
+          router.push("/");
         },
         onError: (ctx) => {
-          alert(ctx.error.message);
+          toast({
+            variant: "destructive",
+            title: "Failed to create account",
+            description: ctx.error.message,
+          });
         },
       }
     );

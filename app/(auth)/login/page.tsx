@@ -10,16 +10,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
+import { signIn } from "@/lib/auth-client";
 import { LoginFormSchema, loginSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginSchema),
@@ -29,8 +33,25 @@ function LoginPage() {
     },
   });
 
-  function onSubmit(data: LoginFormSchema) {
-    console.log(data);
+  async function onSubmit(values: LoginFormSchema) {
+    await signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: (ctx) => {
+          router.push("/");
+        },
+        onError: (ctx) => {
+          toast({
+            variant: "destructive",
+            title: "Failed to login",
+            description: ctx.error.message,
+          });
+        },
+      }
+    );
   }
 
   function togglePasswordVisibility() {
@@ -111,7 +132,7 @@ function LoginPage() {
               {form.formState.isSubmitting ? (
                 <>
                   <Loader2 className="animate-spin" />
-                  Logging
+                  Logging in
                 </>
               ) : (
                 "Login"

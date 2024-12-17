@@ -11,7 +11,7 @@ export const Categories = [
   "Lifestyle",
   "Shopping",
   "General",
-] as const;
+];
 
 export const newTransactionSchema = z.object({
   name: z.string().min(1, { message: "Required" }).max(30),

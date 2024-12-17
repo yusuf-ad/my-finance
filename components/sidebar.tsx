@@ -51,7 +51,7 @@ function Sidebar() {
   return (
     <div
       className={clsx(
-        "sticky bottom-0 lg:inset-0 bg-dark rounded-t-xl lg:rounded-r-xl lg:rounded-t-none lg:rounded-tr-xl pt-4 px-6 lg:px-0 lg:py-10 flex flex-col lg:h-auto transition-all duration-500",
+        "sticky bottom-0 z-50 lg:inset-0 bg-dark rounded-t-xl lg:rounded-r-xl lg:rounded-t-none lg:rounded-tr-xl pt-4 px-6 lg:px-0 lg:py-10 flex flex-col lg:h-auto transition-all duration-500",
         isActive ? "lg:max-w-80 lg:w-80" : "lg:w-20"
       )}
     >

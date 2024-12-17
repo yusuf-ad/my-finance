@@ -1,6 +1,12 @@
 import { CaretRight, JarLight } from "@/components/icons";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-function HomePage() {
+async function HomePage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <div>
       <h1 className="text-gray-900 text-4xl font-bold">Overview</h1>

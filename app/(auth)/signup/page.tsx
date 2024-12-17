@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signUp } from "@/lib/auth-client";
 import { SignupFormSchema, signupSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
@@ -30,8 +31,26 @@ function SignupPage() {
     },
   });
 
-  function onSubmit(data: SignupFormSchema) {
-    console.log(data);
+  async function onSubmit(values: SignupFormSchema) {
+    const { data, error } = await signUp.email(
+      {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onRequest: (ctx) => {
+          //show loading
+        },
+        onSuccess: (ctx) => {
+          console.log(ctx.data);
+          //redirect to the dashboard
+        },
+        onError: (ctx) => {
+          alert(ctx.error.message);
+        },
+      }
+    );
   }
 
   function togglePasswordVisibility() {
@@ -142,7 +161,7 @@ function SignupPage() {
         </Form>
 
         <Link
-          href="/signup"
+          href="/login"
           className="flex justify-center my-8 text-sm text-gray-500"
         >
           Already have an account?{" "}

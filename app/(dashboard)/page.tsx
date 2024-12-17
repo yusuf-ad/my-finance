@@ -1,15 +1,14 @@
 import { CaretRight, JarLight } from "@/components/icons";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import LogoutButton from "@/components/logout-button";
 
-async function HomePage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+function HomePage() {
   return (
     <div>
-      <h1 className="text-gray-900 text-4xl font-bold">Overview</h1>
+      <div className="flex justify-between">
+        <h1 className="text-gray-900 text-4xl font-bold">Overview</h1>
+
+        <LogoutButton />
+      </div>
 
       <div className="my-8 flex flex-col lg:flex-row  justify-between gap-4">
         <div className="bg-dark text-white py-6 px-8 rounded-lg w-full">

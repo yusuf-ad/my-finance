@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 
 const publicRoutes = ["/login", "/signup"];
 const protectedRoutes = [
+  "/",
   "/transactions",
   "/budgets",
   "/pots",

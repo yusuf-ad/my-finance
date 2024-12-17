@@ -19,6 +19,7 @@
 
 # production
 /build
+/migrations
 
 # misc
 .DS_Store

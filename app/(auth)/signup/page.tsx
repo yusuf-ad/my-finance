@@ -43,7 +43,7 @@ function SignupPage() {
       },
       {
         onSuccess: (ctx) => {
-          router.push("/");
+          router.replace("/");
         },
         onError: (ctx) => {
           toast({

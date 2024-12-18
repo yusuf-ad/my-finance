@@ -28,8 +28,8 @@ function LoginPage() {
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "test@gmail.com",
+      password: "testtest",
     },
   });
 
@@ -41,7 +41,7 @@ function LoginPage() {
       },
       {
         onSuccess: (ctx) => {
-          router.push("/");
+          router.replace("/");
         },
         onError: (ctx) => {
           toast({

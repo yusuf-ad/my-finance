@@ -4,6 +4,7 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
+import { ilike } from "drizzle-orm";
 
 export interface Transaction {
   id: number;
@@ -16,8 +17,13 @@ export interface Transaction {
 
 export type NewTransaction = Omit<Transaction, "id">;
 
-export const getTransactions = async (): Promise<Transaction[]> => {
-  const transactions = await db.select().from(transactionsTable);
+export const getTransactions = async (
+  getBy?: string
+): Promise<Transaction[]> => {
+  const transactions = await db
+    .select()
+    .from(transactionsTable)
+    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
 
   const formattedTransactions = transactions.map((transaction) => ({
     ...transaction,

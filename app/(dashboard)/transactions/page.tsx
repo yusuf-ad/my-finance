@@ -1,15 +1,21 @@
 import FilterDropdown from "@/components/filter-dropdown";
 import FilterSelect from "@/components/filter-select";
 import { CaretRight, Filter, Sort } from "@/components/icons";
+import Searchbar from "@/components/searchbar";
 import TransactionsModal from "@/components/transactions-modal";
 import TransactionsTable from "@/components/transactions-table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Categories } from "@/lib/validations";
 import { getTransactions } from "@/server/actions/transaction";
 
-async function TransactionsPage() {
-  const data = await getTransactions();
+async function TransactionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { search } = await searchParams;
+
+  const data = await getTransactions(search as string);
 
   return (
     <>
@@ -24,7 +30,7 @@ async function TransactionsPage() {
       <section className="bg-white my-8 rounded-lg px-6 py-10 ">
         <div className="flex justify-between mb-8">
           <div className="flex-grow max-w-sm">
-            <Input type="search" placeholder="Search transaction" />
+            <Searchbar />
           </div>
           {/* desktop */}
           <div className="md:flex hidden gap-2">

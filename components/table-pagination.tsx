@@ -30,7 +30,10 @@ function TablePagination({ totalPages }: { totalPages: number }) {
   );
 
   function handlePageChange(page: number) {
-    router.push(pathname + "?" + createPageString(page));
+    const newParams = createPageString(page);
+    router.replace(pathname + "?" + newParams, {
+      scroll: false,
+    });
   }
 
   const getPageNumbers = () => {

@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 import NavLink from "./nav-link";
 import MobileNavLink from "./mobile-nav-link";
+import Link from "next/link";
 
 const navLinks = [
   {
@@ -55,7 +56,8 @@ function Sidebar() {
         isActive ? "lg:max-w-80 lg:w-80" : "lg:w-20"
       )}
     >
-      <p
+      <Link
+        href="/"
         className={clsx(
           "text-white text-3xl font-bold px-8 hidden lg:inline-block"
         )}
@@ -81,7 +83,7 @@ function Sidebar() {
         >
           f
         </span>
-      </p>
+      </Link>
 
       {/* desktop navbar */}
       <nav className="mt-24 flex-grow hidden lg:block">

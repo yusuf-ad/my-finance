@@ -5,8 +5,9 @@ import Searchbar from "@/components/searchbar";
 import TablePagination from "@/components/table-pagination";
 import TransactionsModal from "@/components/transactions-modal";
 import TransactionsTable from "@/components/transactions-table";
+import { page_size } from "@/lib/constants";
 import { Categories } from "@/lib/validations";
-import { getTransactions } from "@/server/actions/transaction";
+import { getTotalPages } from "@/server/actions/transaction";
 
 async function TransactionsPage({
   searchParams,
@@ -14,11 +15,9 @@ async function TransactionsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { search, page } = await searchParams;
-
-  const { transactions, totalPages } = await getTransactions({
-    page: parseInt(page as string, 10),
+  const totalPages = await getTotalPages({
     getBy: search as string,
-    pageSize: 10,
+    pageSize: page_size,
   });
 
   return (
@@ -64,7 +63,10 @@ async function TransactionsPage({
           </div>
         </div>
 
-        <TransactionsTable data={transactions} />
+        <TransactionsTable
+          page={parseInt(page as string, 10)}
+          search={search as string}
+        />
 
         <TablePagination totalPages={totalPages} />
       </section>

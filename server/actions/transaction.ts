@@ -21,19 +21,9 @@ export const getTransactions = async ({
   page = 1,
   pageSize = 10,
   getBy,
-}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<{
-  transactions: Transaction[];
-  totalPages: number;
-}> => {
-  const totalRowsResult = await db
-    .select({ count: count(transactionsTable.id) })
-    .from(transactionsTable)
-    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
-
-  const totalRows = totalRowsResult[0].count;
-
-  const totalPages = Math.ceil(totalRows / pageSize);
-
+}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<
+  Transaction[]
+> => {
   const transactions = await db
     .select()
     .from(transactionsTable)
@@ -47,7 +37,26 @@ export const getTransactions = async ({
     date: new Date(transaction.date),
   }));
 
-  return { transactions: formattedTransactions, totalPages };
+  return formattedTransactions;
+};
+
+export const getTotalPages = async ({
+  getBy,
+  pageSize,
+}: {
+  getBy?: string;
+  pageSize: number;
+}) => {
+  const totalRowsResult = await db
+    .select({ count: count(transactionsTable.id) })
+    .from(transactionsTable)
+    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
+
+  const totalRows = totalRowsResult[0].count;
+
+  const totalPages = Math.ceil(totalRows / pageSize);
+
+  return totalPages;
 };
 
 export const createTransaction = async (transaction: NewTransaction) => {

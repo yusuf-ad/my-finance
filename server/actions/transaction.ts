@@ -4,7 +4,7 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
-import { ilike } from "drizzle-orm";
+import { asc, count, ilike } from "drizzle-orm";
 
 export interface Transaction {
   id: number;
@@ -17,12 +17,29 @@ export interface Transaction {
 
 export type NewTransaction = Omit<Transaction, "id">;
 
-export const getTransactions = async (
-  getBy?: string
-): Promise<Transaction[]> => {
+export const getTransactions = async ({
+  page = 1,
+  pageSize = 10,
+  getBy,
+}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<{
+  transactions: Transaction[];
+  totalPages: number;
+}> => {
+  const totalRowsResult = await db
+    .select({ count: count(transactionsTable.id) })
+    .from(transactionsTable)
+    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
+
+  const totalRows = totalRowsResult[0].count;
+
+  const totalPages = Math.ceil(totalRows / pageSize);
+
   const transactions = await db
     .select()
     .from(transactionsTable)
+    .orderBy(asc(transactionsTable.id))
+    .limit(pageSize)
+    .offset((page - 1) * pageSize)
     .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
 
   const formattedTransactions = transactions.map((transaction) => ({
@@ -30,7 +47,7 @@ export const getTransactions = async (
     date: new Date(transaction.date),
   }));
 
-  return formattedTransactions;
+  return { transactions: formattedTransactions, totalPages };
 };
 
 export const createTransaction = async (transaction: NewTransaction) => {

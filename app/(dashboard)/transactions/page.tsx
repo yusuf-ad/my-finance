@@ -1,10 +1,10 @@
 import FilterDropdown from "@/components/filter-dropdown";
 import FilterSelect from "@/components/filter-select";
-import { CaretRight, Filter, Sort } from "@/components/icons";
+import { Filter, Sort } from "@/components/icons";
 import Searchbar from "@/components/searchbar";
+import TablePagination from "@/components/table-pagination";
 import TransactionsModal from "@/components/transactions-modal";
 import TransactionsTable from "@/components/transactions-table";
-import { Button } from "@/components/ui/button";
 import { Categories } from "@/lib/validations";
 import { getTransactions } from "@/server/actions/transaction";
 
@@ -13,9 +13,13 @@ async function TransactionsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { search } = await searchParams;
+  const { search, page } = await searchParams;
 
-  const data = await getTransactions(search as string);
+  const { transactions, totalPages } = await getTransactions({
+    page: parseInt(page as string, 10),
+    getBy: search as string,
+    pageSize: 10,
+  });
 
   return (
     <>
@@ -60,25 +64,9 @@ async function TransactionsPage({
           </div>
         </div>
 
-        <TransactionsTable data={data} />
+        <TransactionsTable data={transactions} />
 
-        <div className="flex justify-between mt-4">
-          <Button
-            disabled={true}
-            className="py-6 font-bold bg-lightBeige text-gray-900"
-          >
-            <CaretRight className="rotate-180" />
-            Prev
-          </Button>
-
-          <Button
-            disabled={true}
-            className="py-6 font-bold bg-lightBeige text-gray-900"
-          >
-            Next
-            <CaretRight />
-          </Button>
-        </div>
+        <TablePagination totalPages={totalPages} />
       </section>
     </>
   );

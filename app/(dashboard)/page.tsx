@@ -1,5 +1,6 @@
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
+import Link from "next/link";
 
 function HomePage() {
   return (
@@ -50,10 +51,10 @@ function Pots() {
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">Pots</h3>
 
-        <button className="flex items-center text-gray-500  gap-3">
+        <Link href={"/pots"} className="flex items-center text-gray-500  gap-3">
           See Details
           <CaretRight />
-        </button>
+        </Link>
       </div>
 
       <div className="bg-lightBeige w-1/2 px-4 py-4 flex items-center gap-4 mt-4 rounded-xl shadow-sm">
@@ -73,10 +74,13 @@ function Transactions() {
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">Transactions</h3>
 
-        <button className="flex items-center text-gray-500  gap-3">
+        <Link
+          href={"/transactions"}
+          className="flex items-center text-gray-500  gap-3"
+        >
           See Details
           <CaretRight />
-        </button>
+        </Link>
       </div>
 
       <div className="mt-4">
@@ -94,10 +98,13 @@ function Budgets() {
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">Budgets</h3>
 
-        <button className="flex items-center text-gray-500  gap-3">
+        <Link
+          href={"/budgets"}
+          className="flex items-center text-gray-500  gap-3"
+        >
           See Details
           <CaretRight />
-        </button>
+        </Link>
       </div>
 
       <div className="mt-4">
@@ -115,10 +122,13 @@ function Bills() {
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">Recurring Bills</h3>
 
-        <button className="flex items-center text-gray-500  gap-3">
+        <Link
+          href={"/recurring-bills"}
+          className="flex items-center text-gray-500  gap-3"
+        >
           See Details
           <CaretRight />
-        </button>
+        </Link>
       </div>
 
       <div className="mt-4 space-y-4">

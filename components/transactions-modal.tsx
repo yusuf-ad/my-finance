@@ -44,8 +44,11 @@ import {
 import clsx from "clsx";
 import { createTransaction } from "@/server/actions/transaction";
 import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 function TransactionsModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<NewTransactionFormSchema>({
     resolver: zodResolver(newTransactionSchema),
     defaultValues: {
@@ -72,6 +75,7 @@ function TransactionsModal() {
         date: new Date(),
         recurring: false,
       });
+      setIsOpen(false); // Close the dialog
     }
 
     if (!res.success) {
@@ -84,9 +88,12 @@ function TransactionsModal() {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="text-white py-6 font-bold">
+        <Button
+          className="text-white py-6 font-bold"
+          onClick={() => setIsOpen(true)}
+        >
           <Plus />
           Add New Transaction
         </Button>

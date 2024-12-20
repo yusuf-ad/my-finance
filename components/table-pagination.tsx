@@ -68,7 +68,7 @@ function TablePagination({ totalPages }: { totalPages: number }) {
             onClick={() => handlePageChange(activePage - 1)}
           >
             <CaretRight className="rotate-180" />
-            Prev
+            <span className="hidden sm:inline-block">Prev</span>
           </Button>
         </PaginationItem>
 
@@ -115,7 +115,7 @@ function TablePagination({ totalPages }: { totalPages: number }) {
             className="py-5 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black"
             onClick={() => handlePageChange(activePage + 1)}
           >
-            Next
+            <span className="hidden sm:inline-block">Next</span>
             <CaretRight />
           </Button>
         </PaginationItem>

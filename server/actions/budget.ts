@@ -6,6 +6,40 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { budgetsTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+export const getBudgets = async (): Promise<
+  | {
+      success: true;
+      budgets: {
+        id: number;
+        category: string;
+        maxSpend: number;
+        theme: string;
+        userId: string | null;
+      }[];
+    }
+  | { success: false; message: string }
+> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const budgets = await db
+      .select()
+      .from(budgetsTable)
+      .where(eq(budgetsTable.userId, session.session.userId));
+
+    return { success: true, budgets };
+  } catch {
+    return { success: false, message: "Failed to fetch budgets" };
+  }
+};
 
 export const createBudget = async (newBudget: BudgetFormSchema) => {
   const isValid = budgetSchema.safeParse(newBudget);
@@ -43,6 +77,8 @@ export const createBudget = async (newBudget: BudgetFormSchema) => {
       theme: newBudget.theme,
       userId: session.session.userId,
     });
+
+    revalidatePath("/budgets");
 
     return { success: true, message: "Budget created successfully" };
   } catch {

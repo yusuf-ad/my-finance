@@ -1,6 +1,15 @@
 import BudgetsModal from "@/components/budgets-modal";
+import { getBudgets } from "@/server/actions/budget";
 
-function BudgetsPage() {
+async function BudgetsPage() {
+  const res = await getBudgets();
+
+  if (!res.success) {
+    return <p>{res.message}</p>;
+  }
+
+  const { budgets } = res;
+
   return (
     <>
       <header className="flex justify-between">
@@ -10,9 +19,11 @@ function BudgetsPage() {
       </header>
 
       <section>
-        <p className="text-gray-400 font-bold mt-8">
-          You haven&apos;t created a budget yet.
-        </p>
+        {budgets.length === 0 && (
+          <p className="text-gray-400 font-bold mt-8">
+            You haven&apos;t created a budget yet.
+          </p>
+        )}
       </section>
     </>
   );

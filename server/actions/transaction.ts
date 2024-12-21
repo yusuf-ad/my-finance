@@ -23,17 +23,22 @@ export const getTransactions = async ({
   page = 1,
   pageSize = 10,
   getBy,
-}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<{
-  success: boolean;
-  transactions: Transaction[];
-  message?: string;
-}> => {
+}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<
+  | {
+      success: true;
+      transactions: Transaction[];
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session?.session.id) {
-    return { success: false, transactions: [], message: "Unauthorized" };
+    return { success: false, message: "Unauthorized" };
   }
 
   try {
@@ -59,7 +64,6 @@ export const getTransactions = async ({
   } catch {
     return {
       success: false,
-      transactions: [],
       message: "Failed to fetch transactions",
     };
   }

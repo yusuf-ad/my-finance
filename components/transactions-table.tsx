@@ -18,40 +18,43 @@ async function TableContent({
   page: number;
   search: string;
 }) {
-  const { success, message, transactions } = await getTransactions({
+  const response = await getTransactions({
     page,
     getBy: search,
     pageSize: page_size,
   });
 
-  if (!success) {
+  if (!response.success) {
     return (
       <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
-        {message}
+        {response.message}
+      </TableCaption>
+    );
+  }
+
+  const { transactions } = response;
+
+  if (transactions.length === 0) {
+    return (
+      <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
+        No results.
       </TableCaption>
     );
   }
 
   return (
-    <>
-      {transactions.length === 0 && (
-        <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
-          No results.
-        </TableCaption>
-      )}
-      <TableBody>
-        {transactions.map((transaction) => (
-          <TableRow key={transaction.id}>
-            <TableCell className="w-[200px]">{transaction.name}</TableCell>
-            <TableCell>{transaction.category}</TableCell>
-            <TableCell>
-              {new Date(transaction.date).toLocaleDateString()}
-            </TableCell>
-            <TableCell className="text-right">{transaction.amount}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </>
+    <TableBody>
+      {transactions.map((transaction) => (
+        <TableRow key={transaction.id}>
+          <TableCell className="w-[200px]">{transaction.name}</TableCell>
+          <TableCell>{transaction.category}</TableCell>
+          <TableCell>
+            {new Date(transaction.date).toLocaleDateString()}
+          </TableCell>
+          <TableCell className="text-right">{transaction.amount}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
   );
 }
 

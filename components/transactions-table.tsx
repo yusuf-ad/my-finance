@@ -18,11 +18,19 @@ async function TableContent({
   page: number;
   search: string;
 }) {
-  const transactions = await getTransactions({
+  const { success, message, transactions } = await getTransactions({
     page,
     getBy: search,
     pageSize: page_size,
   });
+
+  if (!success) {
+    return (
+      <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
+        {message}
+      </TableCaption>
+    );
+  }
 
   return (
     <>

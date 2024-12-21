@@ -4,7 +4,9 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
-import { asc, count, ilike } from "drizzle-orm";
+import { and, asc, count, eq, ilike } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export interface Transaction {
   id: number;
@@ -21,23 +23,46 @@ export const getTransactions = async ({
   page = 1,
   pageSize = 10,
   getBy,
-}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<
-  Transaction[]
-> => {
-  const transactions = await db
-    .select()
-    .from(transactionsTable)
-    .orderBy(asc(transactionsTable.id))
-    .limit(pageSize)
-    .offset((page - 1) * pageSize)
-    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
+}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<{
+  success: boolean;
+  transactions: Transaction[];
+  message?: string;
+}> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const formattedTransactions = transactions.map((transaction) => ({
-    ...transaction,
-    date: new Date(transaction.date),
-  }));
+  if (!session?.session.id) {
+    return { success: false, transactions: [], message: "Unauthorized" };
+  }
 
-  return formattedTransactions;
+  try {
+    const transactions = await db
+      .select()
+      .from(transactionsTable)
+      .orderBy(asc(transactionsTable.id))
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .where(
+        and(
+          eq(transactionsTable.userId, session.session.userId),
+          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+        )
+      );
+
+    const formattedTransactions = transactions.map((transaction) => ({
+      ...transaction,
+      date: new Date(transaction.date),
+    }));
+
+    return { success: true, transactions: formattedTransactions };
+  } catch {
+    return {
+      success: false,
+      transactions: [],
+      message: "Failed to fetch transactions",
+    };
+  }
 };
 
 export const getTotalPages = async ({
@@ -47,16 +72,33 @@ export const getTotalPages = async ({
   getBy?: string;
   pageSize: number;
 }) => {
-  const totalRowsResult = await db
-    .select({ count: count(transactionsTable.id) })
-    .from(transactionsTable)
-    .where(getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const totalRows = totalRowsResult[0].count;
+  if (!session?.session.id) {
+    return 0;
+  }
 
-  const totalPages = Math.ceil(totalRows / pageSize);
+  try {
+    const totalRowsResult = await db
+      .select({ count: count(transactionsTable.id) })
+      .from(transactionsTable)
+      .where(
+        and(
+          eq(transactionsTable.userId, session.session.userId),
+          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+        )
+      );
 
-  return totalPages;
+    const totalRows = totalRowsResult[0].count;
+
+    const totalPages = Math.ceil(totalRows / pageSize);
+
+    return totalPages;
+  } catch {
+    return 0;
+  }
 };
 
 export const createTransaction = async (transaction: NewTransaction) => {
@@ -66,6 +108,14 @@ export const createTransaction = async (transaction: NewTransaction) => {
     return { success: false, message: "Invalid data" };
   }
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
   try {
     await db.insert(transactionsTable).values({
       name: transaction.name,
@@ -73,6 +123,7 @@ export const createTransaction = async (transaction: NewTransaction) => {
       amount: transaction.amount,
       category: transaction.category,
       recurring: transaction.recurring,
+      userId: session.session.userId,
     });
 
     revalidatePath("/transactions");

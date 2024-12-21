@@ -62,7 +62,7 @@ export const Themes = [
 
 export const budgetSchema = z.object({
   category: z.string().min(1, { message: "Required" }).max(50),
-  maximumSpend: z.number().min(1, { message: "Required" }).max(1000000),
+  maxSpend: z.number().min(1, { message: "Required" }).max(1000000),
   theme: z.string().min(1, { message: "Required" }).max(75),
 });
 

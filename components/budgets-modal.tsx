@@ -30,23 +30,47 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import clsx from "clsx";
+import { toast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 function BudgetsModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<BudgetFormSchema>({
     resolver: zodResolver(budgetSchema),
     defaultValues: {
       category: "",
-      maximumSpend: 0,
+      maxSpend: 0,
       theme: "",
     },
   });
 
   async function onSubmit(values: BudgetFormSchema) {
-    await createBudget(values);
+    const res = await createBudget(values);
+
+    if (res.success) {
+      toast({
+        title: "Success",
+        description: res.message,
+      });
+      form.reset({
+        category: "",
+        maxSpend: 0,
+        theme: "",
+      });
+    }
+
+    if (!res.success) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message,
+      });
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="text-white py-6 font-bold">
           <Plus />
@@ -81,10 +105,7 @@ function BudgetsModal() {
                   >
                     Category
                   </label>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a category" />
@@ -105,20 +126,20 @@ function BudgetsModal() {
 
             <FormField
               control={form.control}
-              name="maximumSpend"
+              name="maxSpend"
               render={({ field }) => (
                 <FormItem>
                   <label
-                    htmlFor="maximumSpend"
+                    htmlFor="maxSpend"
                     className={clsx("text-gray-500 text-sm", {
-                      "text-red-500": form.formState.errors.maximumSpend,
+                      "text-red-500": form.formState.errors.maxSpend,
                     })}
                   >
                     Maximum Spend
                   </label>
                   <FormControl>
                     <Input
-                      id="maximumSpend"
+                      id="maxSpend"
                       placeholder="e.g. $2000"
                       {...field}
                       onChange={(e) => {
@@ -150,10 +171,7 @@ function BudgetsModal() {
                   >
                     Theme
                   </label>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a theme" />

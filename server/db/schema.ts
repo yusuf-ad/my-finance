@@ -18,7 +18,7 @@ export const transactionsTable = pgTable("transactions", {
   recurring: boolean().notNull(),
 });
 
-export const budgetSchema = pgTable("budgets", {
+export const budgetsTable = pgTable("budgets", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   userId: text("userId").references(() => user.id),
   category: varchar({ length: 255 }).notNull(),

@@ -10,12 +10,22 @@ import {
 
 export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: text("userId").references(() => user.id),
   name: varchar({ length: 30 }).notNull(),
   date: date().notNull(),
   category: varchar({ length: 255 }).notNull(),
   amount: integer().notNull(),
   recurring: boolean().notNull(),
 });
+
+export const budgetSchema = pgTable("budgets", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  category: varchar({ length: 255 }).notNull(),
+  maxSpend: integer().notNull(),
+  theme: varchar({ length: 255 }).notNull(),
+});
+
+// better-auth schema
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),

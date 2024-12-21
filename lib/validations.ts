@@ -15,8 +15,8 @@ export const Categories = [
 
 export const newTransactionSchema = z.object({
   name: z.string().min(1, { message: "Required" }).max(30),
-  amount: z.number().min(1, { message: "Required" }),
-  category: z.string().min(1, { message: "Required" }),
+  amount: z.number().min(1, { message: "Required" }).max(1000000),
+  category: z.string().min(1, { message: "Required" }).max(50),
   date: z.date(),
   recurring: z.boolean(),
 });
@@ -41,3 +41,21 @@ export const signupSchema = z.object({
 });
 
 export type SignupFormSchema = z.infer<typeof signupSchema>;
+
+export const Themes = [
+  "green#10B981",
+  "yellow#F59E0B",
+  "cyan#06B6D4",
+  "navy#1E3A8A",
+  "red#EF4444",
+  "purple#8B5CF6",
+  "turquoise#14B8A6",
+  "brown#A16207",
+  "magenta#D946EF",
+  "blue#3B82F6",
+  "grey#6B7280",
+  "army#4B5563",
+  "pink#EC4899",
+  "yellowgreen#A3E635",
+  "orange#F97316",
+];

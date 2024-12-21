@@ -68,14 +68,14 @@ function TransactionsModal() {
         title: "Success",
         description: res.message,
       });
-      // form.reset({
-      //   name: "",
-      //   amount: 0,
-      //   category: form.getValues("category"),
-      //   date: new Date(),
-      //   recurring: false,
-      // });
-      // setIsOpen(false); // Close the dialog
+      form.reset({
+        name: "",
+        amount: 0,
+        category: form.getValues("category"),
+        date: new Date(),
+        recurring: false,
+      });
+      setIsOpen(false); // Close the dialog
     }
 
     if (!res.success) {

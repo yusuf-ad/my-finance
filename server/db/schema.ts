@@ -20,6 +20,7 @@ export const transactionsTable = pgTable("transactions", {
 
 export const budgetSchema = pgTable("budgets", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: text("userId").references(() => user.id),
   category: varchar({ length: 255 }).notNull(),
   maxSpend: integer().notNull(),
   theme: varchar({ length: 255 }).notNull(),

@@ -58,6 +58,7 @@ function BudgetsModal() {
         maxSpend: 0,
         theme: "",
       });
+      setIsOpen(false);
     }
 
     if (!res.success) {

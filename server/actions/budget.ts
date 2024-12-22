@@ -8,16 +8,18 @@ import { budgetsTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+export interface Budget {
+  id: number;
+  category: string;
+  maxSpend: number;
+  theme: string;
+  userId: string | null;
+}
+
 export const getBudgets = async (): Promise<
   | {
       success: true;
-      budgets: {
-        id: number;
-        category: string;
-        maxSpend: number;
-        theme: string;
-        userId: string | null;
-      }[];
+      budgets: Budget[];
     }
   | { success: false; message: string }
 > => {

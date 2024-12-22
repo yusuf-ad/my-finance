@@ -1,5 +1,9 @@
+import BudgetCard from "@/components/budget-card";
 import BudgetsModal from "@/components/budgets-modal";
+import { CaretRight, Dots } from "@/components/icons";
+import { parseTheme } from "@/lib/utils";
 import { getBudgets } from "@/server/actions/budget";
+import Link from "next/link";
 
 async function BudgetsPage() {
   const res = await getBudgets();
@@ -25,20 +29,49 @@ async function BudgetsPage() {
           </p>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1 lg:max-w-sm bg-white p-6 "></div>
-          <div className="flex-grow bg-white p-6 ">
-            <h2 className="text-gray-900 font-bold text-lg">Budgets</h2>
-            <div className="mt-4">
-              {budgets.map((budget) => (
-                <div key={budget.id} className="flex justify-between">
-                  <p>{budget.category}</p>
-                  <p>{budget.theme}</p>
-                  <p>{budget.maxSpend}</p>
-                </div>
-              ))}
+        <div className="flex flex-col items-start lg:flex-row gap-4">
+          <div className="flex-1 lg:max-w-sm bg-white p-6 ">
+            <div>
+              <h3 className="text-gray-900 font-semibold mb-2 tracking-wide">
+                Spending Summary
+              </h3>
+
+              <ul>
+                {budgets.map((budget) => {
+                  const { code } = parseTheme(budget.theme);
+
+                  return (
+                    <li
+                      key={budget.id}
+                      className="flex justify-between items-center py-4 border-b last:border-b-0"
+                    >
+                      <div className="flex gap-2 items-center">
+                        <div
+                          className="w-[2px] h-5"
+                          style={{ backgroundColor: code }}
+                        ></div>
+                        <h4 className="capitalize text-gray-500 text-sm">
+                          {budget.category}
+                        </h4>
+                      </div>
+                      <p className="font-semibold">
+                        ${Number(0).toFixed(2)}{" "}
+                        <span className="text-gray-400 font-medium text-sm">
+                          of ${budget.maxSpend.toFixed(2)}
+                        </span>
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
+
+          <ul className="flex-grow space-y-4">
+            {budgets.map((budget) => {
+              return <BudgetCard budget={budget} key={budget.id} />;
+            })}
+          </ul>
         </div>
       </section>
     </>

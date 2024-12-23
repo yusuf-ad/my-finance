@@ -10,7 +10,7 @@ function BillsPage() {
     <>
       <Header title="Recurring Bills" />
 
-      <section className="flex mt-8 gap-6 items-start">
+      <section className="flex flex-col lg:flex-row mt-8 gap-6 items-start">
         <div className="space-y-6 max-w-80 w-full">
           <div className="bg-dark text-white py-8 px-6 rounded-lg w-full">
             <Receipt2 />

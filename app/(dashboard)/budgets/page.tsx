@@ -16,7 +16,7 @@ async function BudgetsPage() {
   return (
     <>
       <Header title="Budgets">
-        <BudgetsModal />
+        <BudgetsModal selectedThemes={budgets.map((budget) => budget.theme)} />
       </Header>
 
       <section className="my-8">

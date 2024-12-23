@@ -33,7 +33,7 @@ import clsx from "clsx";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-function BudgetsModal() {
+function BudgetsModal({ selectedThemes }: { selectedThemes: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<BudgetFormSchema>({
@@ -141,6 +141,7 @@ function BudgetsModal() {
                   <FormControl>
                     <Input
                       id="maxSpend"
+                      type="number"
                       placeholder="e.g. $2000"
                       {...field}
                       onChange={(e) => {
@@ -182,13 +183,21 @@ function BudgetsModal() {
                       {Themes.map((theme) => {
                         const { color, code } = parseTheme(theme);
                         return (
-                          <SelectItem key={color} value={`${color}${code}`}>
+                          <SelectItem
+                            key={color}
+                            disabled={selectedThemes.includes(theme)}
+                            value={`${color}${code}`}
+                          >
                             <div className="flex gap-2 items-center">
                               <div
                                 className="w-5 h-5 rounded-full"
                                 style={{ backgroundColor: code }}
                               ></div>
-                              <span className="capitalize">{color}</span>
+                              <span className="capitalize">
+                                {color}{" "}
+                                {selectedThemes.includes(theme) &&
+                                  "(Already used)"}{" "}
+                              </span>
                             </div>
                           </SelectItem>
                         );

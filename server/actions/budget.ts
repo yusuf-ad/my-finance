@@ -13,7 +13,6 @@ export interface Budget {
   category: string;
   maxSpend: number;
   theme: string;
-  userId: string | null;
 }
 
 export const getBudgets = async (): Promise<

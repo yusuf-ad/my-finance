@@ -21,21 +21,21 @@ async function BudgetsPage() {
       </header>
 
       <section className="my-8">
-        {budgets.length === 0 && (
+        {budgets.length === 0 ? (
           <p className="text-gray-400 font-bold mt-8">
             You haven&apos;t created a budget yet.
           </p>
+        ) : (
+          <div className="flex flex-col lg:items-start lg:flex-row gap-4">
+            <BudgetsSummary budgets={budgets} />
+
+            <ul className="flex-grow space-y-4">
+              {budgets.map((budget) => (
+                <BudgetCard budget={budget} key={budget.id} />
+              ))}
+            </ul>
+          </div>
         )}
-
-        <div className="flex flex-col lg:items-start lg:flex-row gap-4">
-          <BudgetsSummary budgets={budgets} />
-
-          <ul className="flex-grow space-y-4">
-            {budgets.map((budget) => (
-              <BudgetCard budget={budget} key={budget.id} />
-            ))}
-          </ul>
-        </div>
       </section>
     </>
   );

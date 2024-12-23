@@ -1,7 +1,6 @@
 "use client";
 
 import { Label, Pie, PieChart } from "recharts";
-
 import {
   ChartConfig,
   ChartContainer,
@@ -9,44 +8,29 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useMemo } from "react";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-];
+import { Budget } from "@/server/actions/budget";
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
+  maxSpend: {
+    label: "Max Spend",
   },
 } satisfies ChartConfig;
 
-function BudgetsChart() {
-  const totalVisitors = useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+function BudgetsChart({ budgets }: { budgets: Budget[] }) {
+  const chartData = useMemo(() => {
+    return budgets.map((budget) => {
+      const [color, code] = budget.theme.split("#");
+      return {
+        category: budget.category,
+        maxSpend: budget.maxSpend,
+        fill: `#${code}`,
+      };
+    });
   }, []);
+
+  const totalMaxSpend = useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.maxSpend, 0);
+  }, [chartData]);
 
   return (
     <ChartContainer
@@ -60,8 +44,8 @@ function BudgetsChart() {
         />
         <Pie
           data={chartData}
-          dataKey="visitors"
-          nameKey="browser"
+          dataKey="maxSpend"
+          nameKey="category"
           innerRadius={60}
           strokeWidth={5}
         >
@@ -80,18 +64,19 @@ function BudgetsChart() {
                       y={viewBox.cy}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      {totalVisitors.toLocaleString()}
+                      $0
                     </tspan>
                     <tspan
                       x={viewBox.cx}
                       y={(viewBox.cy || 0) + 24}
                       className="fill-muted-foreground"
                     >
-                      Visitors
+                      of ${totalMaxSpend.toLocaleString()} limit
                     </tspan>
                   </text>
                 );
               }
+              return null;
             }}
           />
         </Pie>

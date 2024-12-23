@@ -6,7 +6,7 @@ function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
   return (
     <div className="flex-1 lg:max-w-sm bg-white p-6 ">
       <div>
-        <BudgetsChart />
+        <BudgetsChart budgets={budgets} />
       </div>
 
       <h3 className="text-gray-900 font-semibold mb-2 tracking-wide">

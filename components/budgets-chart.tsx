@@ -26,7 +26,7 @@ function BudgetsChart({ budgets }: { budgets: Budget[] }) {
         fill: `#${code}`,
       };
     });
-  }, []);
+  }, [budgets]);
 
   const totalMaxSpend = useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.maxSpend, 0);

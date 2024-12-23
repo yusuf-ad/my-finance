@@ -1,13 +1,12 @@
+import Header from "@/components/header";
 import PotsModal from "@/components/pots-modal";
 
 function PotsPage() {
   return (
     <>
-      <header className="flex justify-between">
-        <h1 className="text-gray-900 text-4xl font-bold">Pots</h1>
-
+      <Header title="Pots">
         <PotsModal />
-      </header>
+      </Header>
 
       <section>
         <p className="text-gray-400 font-bold mt-8">

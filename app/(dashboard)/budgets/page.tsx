@@ -1,6 +1,7 @@
 import BudgetCard from "@/components/budget-card";
 import BudgetsModal from "@/components/budgets-modal";
 import BudgetsSummary from "@/components/budgets-summary";
+import Header from "@/components/header";
 import { getBudgets } from "@/server/actions/budget";
 
 async function BudgetsPage() {
@@ -14,11 +15,9 @@ async function BudgetsPage() {
 
   return (
     <>
-      <header className="flex justify-between">
-        <h1 className="text-gray-900 text-4xl font-bold">Budgets</h1>
-
+      <Header title="Budgets">
         <BudgetsModal />
-      </header>
+      </Header>
 
       <section className="my-8">
         {budgets.length === 0 ? (

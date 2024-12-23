@@ -1,5 +1,6 @@
 import BillsTable from "@/components/bills-table";
 import FilterSelect from "@/components/filter-select";
+import Header from "@/components/header";
 import { CaretRight, Receipt2 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,9 +8,7 @@ import { Input } from "@/components/ui/input";
 function BillsPage() {
   return (
     <>
-      <header className="flex justify-between">
-        <h1 className="text-gray-900 text-4xl font-bold">Recurring Bills</h1>
-      </header>
+      <Header title="Recurring Bills" />
 
       <section className="flex mt-8 gap-6 items-start">
         <div className="space-y-6 max-w-80 w-full">

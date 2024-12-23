@@ -1,5 +1,6 @@
 import FilterDropdown from "@/components/filter-dropdown";
 import FilterSelect from "@/components/filter-select";
+import Header from "@/components/header";
 import { Filter, Sort } from "@/components/icons";
 import Searchbar from "@/components/searchbar";
 import TablePagination from "@/components/table-pagination";
@@ -22,13 +23,9 @@ async function TransactionsPage({
 
   return (
     <>
-      <header className="flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
-        <h1 className="text-gray-900 text-4xl font-bold text-center sm:text-left">
-          Transactions
-        </h1>
-
+      <Header title="Transactions">
         <TransactionsModal />
-      </header>
+      </Header>
 
       <section className="bg-white my-8 rounded-lg px-6 py-10 ">
         <div className="flex justify-between mb-8">

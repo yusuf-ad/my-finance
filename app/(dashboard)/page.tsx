@@ -1,3 +1,4 @@
+import Header from "@/components/header";
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
 import Link from "next/link";
@@ -5,11 +6,9 @@ import Link from "next/link";
 function HomePage() {
   return (
     <div>
-      <div className="flex justify-between">
-        <h1 className="text-gray-900 text-4xl font-bold">Overview</h1>
-
+      <Header title="Overview">
         <LogoutButton />
-      </div>
+      </Header>
 
       <div className="my-8 flex flex-col lg:flex-row  justify-between gap-4">
         <div className="bg-dark text-white py-6 px-8 rounded-lg w-full">

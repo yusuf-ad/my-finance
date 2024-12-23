@@ -10,6 +10,7 @@ import {
 import { page_size } from "@/lib/constants";
 import { getTransactions } from "@/server/actions/transaction";
 import { Suspense } from "react";
+import ActionsDropdown from "./actions-dropdown";
 
 async function TableContent({
   page,
@@ -51,7 +52,12 @@ async function TableContent({
           <TableCell>
             {new Date(transaction.date).toLocaleDateString()}
           </TableCell>
-          <TableCell className="text-right">{transaction.amount}</TableCell>
+          <TableCell className="text-right font-semibold text-red-500">
+            -${transaction.amount.toFixed(2)}
+          </TableCell>
+          <TableCell className="text-right">
+            <ActionsDropdown options={["Edit", "Delete", "Mark as income"]} />
+          </TableCell>
         </TableRow>
       ))}
     </TableBody>
@@ -73,6 +79,7 @@ export default function TransactionsTable({
           <TableHead>Category</TableHead>
           <TableHead>Transaction Date</TableHead>
           <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right"></TableHead>
         </TableRow>
       </TableHeader>
       <Suspense

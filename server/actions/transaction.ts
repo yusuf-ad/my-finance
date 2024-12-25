@@ -93,8 +93,6 @@ export const getSpendings = async ({
   }
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const spendings = await db
       .select()
       .from(transactionsTable)

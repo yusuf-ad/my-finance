@@ -5,6 +5,7 @@ import { parseTheme } from "@/lib/utils";
 import SpendingList from "./spending-list";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import BudgetStats from "./budget-stats";
 
 function BudgetCard({ budget }: { budget: Budget }) {
   const { code } = parseTheme(budget.theme);
@@ -27,31 +28,11 @@ function BudgetCard({ budget }: { budget: Budget }) {
         Maximum of ${budget.maxSpend.toFixed(2)}
       </p>
 
-      <div>
-        <div className="h-6 bg-lightBeige rounded-sm"></div>
-      </div>
-
-      <div className="flex my-4">
-        <div className="flex-1 flex gap-4 items-center">
-          <div className="w-1 h-7" style={{ backgroundColor: code }}></div>
-
-          <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500">Spent</span>
-            <span className="text-xs font-bold text-gray-900">$0.00</span>
-          </div>
-        </div>
-
-        <div className="flex-1 flex gap-4 items-center">
-          <div className="w-1 h-7 bg-lightBeige"></div>
-
-          <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500">Free</span>
-            <span className="text-xs font-bold text-gray-900">
-              ${(budget.maxSpend - 0).toFixed(2)}
-            </span>
-          </div>
-        </div>
-      </div>
+      <BudgetStats
+        color={code}
+        maxSpend={budget.maxSpend}
+        category={budget.category}
+      />
 
       <div className="p-4 bg-lightBeige rounded-sm">
         <div className="flex  justify-between">

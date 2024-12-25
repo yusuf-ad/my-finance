@@ -9,9 +9,9 @@ function Spending({ spending }: { spending: Transaction }) {
 
       <div className="flex flex-col font-semibold text-sm items-end gap-1">
         {spending.isIncome ? (
-          <span className="text-green-600">+$1249.00</span>
+          <span className="text-green-600">+${spending.amount.toFixed(2)}</span>
         ) : (
-          <span className="text-red-600">-$1249.00</span>
+          <span className="text-red-600">-${spending.amount.toFixed(2)}</span>
         )}
         <span className="text-gray-600 font-normal text-xs">12/26/2024</span>
       </div>

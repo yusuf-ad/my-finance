@@ -54,7 +54,7 @@ async function TableContent({
           </TableCell>
           {transaction.isIncome ? (
             <TableCell className="text-right font-semibold text-green-600">
-              ${transaction.amount.toFixed(2)}
+              +${transaction.amount.toFixed(2)}
             </TableCell>
           ) : (
             <TableCell className="text-right font-semibold">

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { CaretRight, Dots } from "./icons";
 import { Budget } from "@/server/actions/budget";
 import { parseTheme } from "@/lib/utils";
+import SpendingList from "./spending-list";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 function BudgetCard({ budget }: { budget: Budget }) {
   const { code } = parseTheme(budget.theme);
@@ -62,9 +65,15 @@ function BudgetCard({ budget }: { budget: Budget }) {
           </Link>
         </div>
 
-        <p className="text-center mt-4 text-gray-500 text-sm">
-          You haven&apos;t made any spendings yet.
-        </p>
+        <Suspense
+          fallback={
+            <div className="py-4 flex justify-center items-center">
+              <Loader2 className="animate-spin" />
+            </div>
+          }
+        >
+          <SpendingList category={budget.category} />
+        </Suspense>
       </div>
     </div>
   );

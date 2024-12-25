@@ -70,6 +70,55 @@ export const getTransactions = async ({
   }
 };
 
+export const getSpendings = async ({
+  category,
+}: {
+  category: string;
+}): Promise<
+  | {
+      success: true;
+      spendings: Transaction[];
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const spendings = await db
+      .select()
+      .from(transactionsTable)
+      .where(
+        and(
+          eq(transactionsTable.userId, session.session.userId),
+          eq(transactionsTable.category, category)
+        )
+      );
+
+    const formattedSpendings = spendings.map((spending) => ({
+      ...spending,
+      date: new Date(spending.date),
+    }));
+
+    return { success: true, spendings: formattedSpendings };
+  } catch {
+    return {
+      success: false,
+      message: "Failed to fetch spendings",
+    };
+  }
+};
+
 export const getTotalPages = async ({
   getBy,
   pageSize,

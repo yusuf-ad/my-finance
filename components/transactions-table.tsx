@@ -52,9 +52,15 @@ async function TableContent({
           <TableCell>
             {new Date(transaction.date).toLocaleDateString()}
           </TableCell>
-          <TableCell className="text-right font-semibold text-red-500">
-            -${transaction.amount.toFixed(2)}
-          </TableCell>
+          {transaction.isIncome ? (
+            <TableCell className="text-right font-semibold text-green-600">
+              ${transaction.amount.toFixed(2)}
+            </TableCell>
+          ) : (
+            <TableCell className="text-right font-semibold">
+              -${transaction.amount.toFixed(2)}
+            </TableCell>
+          )}
           <TableCell className="text-right">
             <ActionsDropdown options={["Edit", "Delete", "Mark as income"]} />
           </TableCell>

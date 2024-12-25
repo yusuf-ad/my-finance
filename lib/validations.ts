@@ -14,11 +14,12 @@ export const Categories = [
 ];
 
 export const newTransactionSchema = z.object({
-  name: z.string().min(1, { message: "Required" }).max(30),
+  name: z.string().min(2, { message: "Required" }).max(30),
   amount: z.number().min(1, { message: "Required" }).max(1000000),
-  category: z.string().min(1, { message: "Required" }).max(50),
+  category: z.string().min(2, { message: "Required" }).max(50),
   date: z.date(),
   recurring: z.boolean(),
+  isIncome: z.boolean(),
 });
 
 export type NewTransactionFormSchema = z.infer<typeof newTransactionSchema>;
@@ -33,7 +34,7 @@ export const loginSchema = z.object({
 export type LoginFormSchema = z.infer<typeof loginSchema>;
 
 export const signupSchema = z.object({
-  name: z.string().min(1, { message: "Required" }).max(30),
+  name: z.string().min(2, { message: "Required" }).max(30),
   email: z.string().email(),
   password: z
     .string()
@@ -61,7 +62,7 @@ export const Themes = [
 ];
 
 export const budgetSchema = z.object({
-  category: z.string().min(1, { message: "Required" }).max(50),
+  category: z.string().min(2, { message: "Required" }).max(50),
   maxSpend: z.number().min(1, { message: "Required" }).max(1000000),
   theme: z.string().min(1, { message: "Required" }).max(75),
 });

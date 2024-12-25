@@ -57,6 +57,7 @@ function TransactionsModal() {
       category: "",
       date: new Date(),
       recurring: false,
+      isIncome: false,
     },
   });
 
@@ -250,6 +251,31 @@ function TransactionsModal() {
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="isIncome"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center space-x-3 py-2 -mb-2">
+                    <label
+                      htmlFor="isIncome"
+                      className={clsx("text-gray-500 text-sm select-none", {
+                        "text-red-500": form.formState.errors.isIncome,
+                      })}
+                    >
+                      Mark as Income
+                    </label>
+
+                    <Checkbox
+                      id="isIncome"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </div>
                 </FormItem>
               )}
             />

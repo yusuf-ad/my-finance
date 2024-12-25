@@ -16,6 +16,7 @@ export const transactionsTable = pgTable("transactions", {
   category: varchar({ length: 255 }).notNull(),
   amount: integer().notNull(),
   recurring: boolean().notNull(),
+  isIncome: boolean().notNull().default(false),
 });
 
 export const budgetsTable = pgTable("budgets", {

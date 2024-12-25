@@ -15,6 +15,7 @@ export interface Transaction {
   category: string;
   amount: number;
   recurring: boolean;
+  isIncome: boolean;
 }
 
 export type NewTransaction = Omit<Transaction, "id">;
@@ -127,6 +128,7 @@ export const createTransaction = async (transaction: NewTransaction) => {
       amount: transaction.amount,
       category: transaction.category,
       recurring: transaction.recurring,
+      isIncome: transaction.isIncome,
       userId: session.session.userId,
     });
 

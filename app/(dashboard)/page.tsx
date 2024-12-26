@@ -1,11 +1,15 @@
+import BudgetsChart from "@/components/budgets-chart";
 import Header from "@/components/header";
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
+import SkeletonBudgets from "@/components/skeletons/skeleton-budgets";
 import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
 import { Spending } from "@/components/spending-list";
+import { parseTheme } from "@/lib/utils";
+import { getBudgets } from "@/server/actions/budget";
 import {
   getLatestTransactions,
-  getTransactions,
+  getSpendings,
 } from "@/server/actions/transaction";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -44,7 +48,9 @@ function HomePage() {
         </div>
 
         <div className="w-full space-y-4">
-          <Budgets />
+          <Suspense fallback={<SkeletonBudgets />}>
+            <Budgets />
+          </Suspense>
 
           <Bills />
         </div>
@@ -112,7 +118,28 @@ async function Transactions() {
   );
 }
 
-function Budgets() {
+async function Budgets() {
+  const budgetsData = getBudgets();
+  const spendingsData = getSpendings({ category: "all" });
+
+  const [budgets, spendings] = await Promise.all([budgetsData, spendingsData]);
+
+  const totalSpent = spendings.success
+    ? spendings.spendings.reduce((acc, spending) => {
+        return spending.isIncome ? 0 : acc - spending.amount;
+      }, 0)
+    : 0;
+
+  const totalIncome = spendings.success
+    ? spendings.spendings.reduce((acc, spending) => {
+        return spending.isIncome ? acc + spending.amount : acc;
+      }, 0)
+    : 0;
+
+  const freeBudget = totalSpent + totalIncome;
+
+  const errorMsg = !budgets.success ? budgets.message : "";
+
   return (
     <div className="bg-white py-6 px-6 rounded-lg min-h-[270px]">
       <div className="flex justify-between">
@@ -128,9 +155,59 @@ function Budgets() {
       </div>
 
       <div className="mt-4">
-        <p className="capitalize text-gray-400 text-sm font-bold">
-          No data provided
-        </p>
+        {!budgets.success || !spendings.success ? (
+          <p className="text-gray-400 text-sm font-bold">{errorMsg}</p>
+        ) : budgets.budgets.length > 0 ? (
+          <div className="flex items-center gap-4">
+            <div className="h-full w-full">
+              <BudgetsChart budgets={budgets.budgets} free={freeBudget} />
+            </div>
+
+            <ul className="space-y-2">
+              {budgets.budgets.map((budget) => {
+                const { code } = parseTheme(budget.theme);
+                const categorizedSpendings = spendings.spendings.filter(
+                  (spending) => spending.category === budget.category
+                );
+
+                const totalSpent = categorizedSpendings.reduce(
+                  (acc, spending) => {
+                    return spending.isIncome ? 0 : acc - spending.amount;
+                  },
+                  0
+                );
+
+                const totalIncome = categorizedSpendings.reduce(
+                  (acc, spending) => {
+                    return spending.isIncome ? acc + spending.amount : acc;
+                  },
+                  0
+                );
+
+                const free =
+                  totalIncome + totalSpent >= 0 ? 0 : totalIncome + totalSpent;
+
+                return (
+                  <li key={budget.id} className="flex items-center gap-4">
+                    <div
+                      className="w-[2px] h-8"
+                      style={{ backgroundColor: code }}
+                    ></div>
+
+                    <div className="flex flex-col font-semibold text-xs gap-1 items-start">
+                      <span className="text-gray-600">{budget.category}</span>
+                      <span className="font-bold">${free.toFixed(2)}</span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : (
+          <p className="capitalize text-gray-400 text-sm font-bold">
+            No data provided
+          </p>
+        )}
       </div>
     </div>
   );

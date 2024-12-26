@@ -2,14 +2,14 @@ import Link from "next/link";
 import { CaretRight } from "../icons";
 import { Loader2 } from "lucide-react";
 
-function SkeletonTransactions() {
+function SkeletonBudgets() {
   return (
-    <div className="bg-white py-6 px-6 rounded-lg min-h-[180px] flex flex-col">
+    <div className="bg-white py-6 px-6 rounded-lg min-h-[270px] flex flex-col">
       <div className="flex justify-between">
-        <h3 className="text-gray-900 font-bold text-xl">Transactions</h3>
+        <h3 className="text-gray-900 font-bold text-xl">Budgets</h3>
 
         <Link
-          href={"/transactions"}
+          href={"/budgets"}
           className="flex items-center text-gray-500  gap-3"
         >
           See Details
@@ -24,4 +24,4 @@ function SkeletonTransactions() {
   );
 }
 
-export default SkeletonTransactions;
+export default SkeletonBudgets;

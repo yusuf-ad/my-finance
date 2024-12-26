@@ -93,6 +93,8 @@ export const getSpendings = async ({
   }
 
   try {
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+
     const whereCondition =
       category === "all"
         ? eq(transactionsTable.userId, session.session.userId)
@@ -206,8 +208,6 @@ export const getLatestTransactions = async (
   }
 
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const transactions = await db
       .select()
       .from(transactionsTable)

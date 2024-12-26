@@ -93,9 +93,6 @@ export const getSpendings = async ({
   }
 
   try {
-    // Simulate delay
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const whereCondition =
       category === "all"
         ? eq(transactionsTable.userId, session.session.userId)

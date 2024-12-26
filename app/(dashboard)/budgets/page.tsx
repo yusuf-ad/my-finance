@@ -2,6 +2,7 @@ import BudgetCard from "@/components/budget-card";
 import BudgetsModal from "@/components/budgets-modal";
 import BudgetsSummary from "@/components/budgets-summary";
 import Header from "@/components/header";
+import SkeletonBudgetSummary from "@/components/skeletons/skeleton-budget-summary";
 import { getBudgets } from "@/server/actions/budget";
 import { Suspense } from "react";
 
@@ -27,7 +28,7 @@ async function BudgetsPage() {
           </p>
         ) : (
           <div className="flex flex-col lg:items-start lg:flex-row gap-4">
-            <Suspense>
+            <Suspense fallback={<SkeletonBudgetSummary budgets={budgets} />}>
               <BudgetsSummary budgets={budgets} />
             </Suspense>
 

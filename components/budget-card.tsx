@@ -28,11 +28,13 @@ function BudgetCard({ budget }: { budget: Budget }) {
         Maximum of ${budget.maxSpend.toFixed(2)}
       </p>
 
-      <BudgetStats
-        color={code}
-        maxSpend={budget.maxSpend}
-        category={budget.category}
-      />
+      <Suspense>
+        <BudgetStats
+          color={code}
+          maxSpend={budget.maxSpend}
+          category={budget.category}
+        />
+      </Suspense>
 
       <div className="p-4 bg-lightBeige rounded-sm">
         <div className="flex  justify-between">

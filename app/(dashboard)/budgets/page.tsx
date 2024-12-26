@@ -3,6 +3,7 @@ import BudgetsModal from "@/components/budgets-modal";
 import BudgetsSummary from "@/components/budgets-summary";
 import Header from "@/components/header";
 import { getBudgets } from "@/server/actions/budget";
+import { Suspense } from "react";
 
 async function BudgetsPage() {
   const res = await getBudgets();
@@ -26,7 +27,9 @@ async function BudgetsPage() {
           </p>
         ) : (
           <div className="flex flex-col lg:items-start lg:flex-row gap-4">
-            <BudgetsSummary budgets={budgets} />
+            <Suspense>
+              <BudgetsSummary budgets={budgets} />
+            </Suspense>
 
             <ul className="flex-grow space-y-4">
               {budgets.map((budget) => (

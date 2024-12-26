@@ -93,15 +93,21 @@ export const getSpendings = async ({
   }
 
   try {
+    // Simulate delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const whereCondition =
+      category === "all"
+        ? eq(transactionsTable.userId, session.session.userId)
+        : and(
+            eq(transactionsTable.userId, session.session.userId),
+            eq(transactionsTable.category, category)
+          );
+
     const spendings = await db
       .select()
       .from(transactionsTable)
-      .where(
-        and(
-          eq(transactionsTable.userId, session.session.userId),
-          eq(transactionsTable.category, category)
-        )
-      );
+      .where(whereCondition);
 
     const formattedSpendings = spendings.map((spending) => ({
       ...spending,
@@ -133,22 +139,17 @@ export const getTotalPages = async ({
   }
 
   try {
-    const totalRowsResult = await db
-      .select({ count: count(transactionsTable.id) })
-      .from(transactionsTable)
-      .where(
-        and(
-          eq(transactionsTable.userId, session.session.userId),
-          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
-        )
-      );
-
-    const totalRows = totalRowsResult[0].count;
+    const totalRows = await db.$count(
+      transactionsTable,
+      and(
+        eq(transactionsTable.userId, session.session.userId),
+        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+      )
+    );
 
     const totalPages = Math.ceil(totalRows / pageSize);
-
     return totalPages;
-  } catch {
+  } catch (error) {
     return 0;
   }
 };

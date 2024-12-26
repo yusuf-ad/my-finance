@@ -1,12 +1,31 @@
 import { parseTheme } from "@/lib/utils";
 import { Budget } from "@/server/actions/budget";
 import BudgetsChart from "./budgets-chart";
+import { getSpendings } from "@/server/actions/transaction";
 
-function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
+async function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
+  const res = await getSpendings({ category: "all" });
+
+  if (!res.success) {
+    return null;
+  }
+
+  const { spendings } = res;
+
+  const totalSpent = spendings.reduce((acc, spending) => {
+    return spending.isIncome ? 0 : acc - spending.amount;
+  }, 0);
+
+  const totalIncome = spendings.reduce((acc, spending) => {
+    return spending.isIncome ? acc + spending.amount : acc;
+  }, 0);
+
+  const freeBudget = totalSpent + totalIncome;
+
   return (
     <div className="flex-1 lg:max-w-sm bg-white p-6 ">
       <div>
-        <BudgetsChart budgets={budgets} />
+        <BudgetsChart budgets={budgets} free={freeBudget} />
       </div>
 
       <h3 className="text-gray-900 font-semibold mb-2 tracking-wide">
@@ -16,6 +35,20 @@ function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
       <ul>
         {budgets.map((budget) => {
           const { code } = parseTheme(budget.theme);
+          const categorizedSpendings = spendings.filter(
+            (spending) => spending.category === budget.category
+          );
+
+          const totalSpent = categorizedSpendings.reduce((acc, spending) => {
+            return spending.isIncome ? 0 : acc - spending.amount;
+          }, 0);
+
+          const totalIncome = categorizedSpendings.reduce((acc, spending) => {
+            return spending.isIncome ? acc + spending.amount : acc;
+          }, 0);
+
+          const free =
+            totalIncome + totalSpent >= 0 ? 0 : totalIncome + totalSpent;
 
           return (
             <li
@@ -32,7 +65,7 @@ function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
                 </h4>
               </div>
               <p className="font-semibold">
-                ${Number(0).toFixed(2)}{" "}
+                ${Math.abs(free).toFixed(2)}{" "}
                 <span className="text-gray-400 font-medium text-sm">
                   of ${budget.maxSpend.toFixed(2)}
                 </span>

@@ -16,7 +16,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function BudgetsChart({ budgets }: { budgets: Budget[] }) {
+function BudgetsChart({ budgets, free }: { budgets: Budget[]; free: number }) {
   const chartData = useMemo(() => {
     return budgets.map((budget) => {
       const [color, code] = budget.theme.split("#");
@@ -64,14 +64,14 @@ function BudgetsChart({ budgets }: { budgets: Budget[] }) {
                       y={viewBox.cy}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      $0
+                      ${free}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
                       y={(viewBox.cy || 0) + 24}
                       className="fill-muted-foreground"
                     >
-                      of ${totalMaxSpend.toLocaleString()} limit
+                      of ${totalMaxSpend} limit
                     </tspan>
                   </text>
                 );

@@ -1,7 +1,9 @@
+import BalanceSummary from "@/components/balance-summary";
 import BudgetsChart from "@/components/budgets-chart";
 import Header from "@/components/header";
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
+import SkeletonBalance from "@/components/skeletons/skeleton-balance";
 import SkeletonBudgets from "@/components/skeletons/skeleton-budgets";
 import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
 import { Spending } from "@/components/spending-list";
@@ -21,22 +23,9 @@ function HomePage() {
         <LogoutButton />
       </Header>
 
-      <div className="my-8 flex flex-col lg:flex-row  justify-between gap-4">
-        <div className="bg-dark text-white py-6 px-8 rounded-lg w-full">
-          <h2 className="mb-3 text-sm">Current Balance</h2>
-          <p className="text-3xl font-bold">$0.00</p>
-        </div>
-
-        <div className="bg-white py-6 px-8 rounded-lg w-full">
-          <h2 className="mb-3 text-sm text-gray-500">Income</h2>
-          <p className="text-3xl font-bold text-gray-900">$0.00</p>
-        </div>
-
-        <div className="bg-white py-6 px-8 rounded-lg w-full">
-          <h2 className="mb-3 text-sm text-gray-500">Expenses</h2>
-          <p className="text-3xl font-bold text-gray-900">$0.00</p>
-        </div>
-      </div>
+      <Suspense fallback={<SkeletonBalance />}>
+        <BalanceSummary />
+      </Suspense>
 
       <div className="flex gap-4 flex-col lg:flex-row">
         <div className="w-full space-y-4">

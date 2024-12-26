@@ -1,6 +1,6 @@
 import { getSpendings, Transaction } from "@/server/actions/transaction";
 
-function Spending({ spending }: { spending: Transaction }) {
+export function Spending({ spending }: { spending: Transaction }) {
   return (
     <div className="flex justify-between items-center py-2 border-b last:border-b-0 first:mt-2">
       <h3 className="capitalize font-semibold text-gray-900 text-sm">

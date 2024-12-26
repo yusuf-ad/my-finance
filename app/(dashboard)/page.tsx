@@ -1,7 +1,14 @@
 import Header from "@/components/header";
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
+import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
+import { Spending } from "@/components/spending-list";
+import {
+  getLatestTransactions,
+  getTransactions,
+} from "@/server/actions/transaction";
 import Link from "next/link";
+import { Suspense } from "react";
 
 function HomePage() {
   return (
@@ -31,7 +38,9 @@ function HomePage() {
         <div className="w-full space-y-4">
           <Pots />
 
-          <Transactions />
+          <Suspense fallback={<SkeletonTransactions />}>
+            <Transactions />
+          </Suspense>
         </div>
 
         <div className="w-full space-y-4">
@@ -67,7 +76,9 @@ function Pots() {
   );
 }
 
-function Transactions() {
+async function Transactions() {
+  const res = await getLatestTransactions();
+
   return (
     <div className="bg-white py-6 px-6 rounded-lg min-h-[180px]">
       <div className="flex justify-between">
@@ -83,9 +94,19 @@ function Transactions() {
       </div>
 
       <div className="mt-4">
-        <p className="capitalize text-gray-400 text-sm font-bold">
-          No data provided
-        </p>
+        {!res.success ? (
+          <p className="text-gray-400 text-sm font-bold">{res.message}</p>
+        ) : res.transactions.length > 0 ? (
+          <div className="space-y-4">
+            {res.transactions.map((transaction) => (
+              <Spending key={transaction.id} spending={transaction} />
+            ))}
+          </div>
+        ) : (
+          <p className="capitalize text-gray-400 text-sm font-bold">
+            No data provided
+          </p>
+        )}
       </div>
     </div>
   );

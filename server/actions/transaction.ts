@@ -4,7 +4,7 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
-import { and, asc, count, eq, ilike } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -182,5 +182,52 @@ export const createTransaction = async (transaction: NewTransaction) => {
     return { success: true, message: "Transaction created successfully" };
   } catch {
     return { success: false, message: "Failed to create transaction" };
+  }
+};
+
+export const getLatestTransactions = async (
+  number: number = 4
+): Promise<
+  | {
+      success: true;
+      transactions: Transaction[];
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const transactions = await db
+      .select()
+      .from(transactionsTable)
+      .where(eq(transactionsTable.userId, session.session.userId))
+      .orderBy(desc(transactionsTable.id))
+      .limit(number);
+
+    const formattedTransactions = transactions.map((transaction) => ({
+      ...transaction,
+      date: new Date(transaction.date),
+    }));
+
+    return {
+      success: true,
+      transactions: formattedTransactions,
+    };
+  } catch {
+    return {
+      success: false,
+      message: "Failed to fetch latest transactions",
+    };
   }
 };

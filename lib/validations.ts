@@ -68,3 +68,11 @@ export const budgetSchema = z.object({
 });
 
 export type BudgetFormSchema = z.infer<typeof budgetSchema>;
+
+export const potsSchema = z.object({
+  name: z.string().min(2, { message: "Required" }).max(30),
+  target: z.number().min(1, { message: "Required" }).max(1000000),
+  theme: z.string().min(1, { message: "Required" }).max(75),
+});
+
+export type PotsFormSchema = z.infer<typeof potsSchema>;

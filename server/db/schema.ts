@@ -27,6 +27,14 @@ export const budgetsTable = pgTable("budgets", {
   theme: varchar({ length: 255 }).notNull(),
 });
 
+export const potsTable = pgTable("pots", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: text("userId").references(() => user.id),
+  name: varchar({ length: 30 }).notNull(),
+  target: integer().notNull(),
+  theme: varchar({ length: 255 }).notNull(),
+});
+
 // better-auth schema
 
 export const user = pgTable("user", {

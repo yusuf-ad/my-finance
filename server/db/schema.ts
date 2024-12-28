@@ -33,6 +33,7 @@ export const potsTable = pgTable("pots", {
   name: varchar({ length: 30 }).notNull(),
   target: integer().notNull(),
   theme: varchar({ length: 255 }).notNull(),
+  totalSaved: integer().notNull().default(0),
 });
 
 // better-auth schema

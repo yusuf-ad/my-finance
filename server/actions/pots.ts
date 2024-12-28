@@ -8,6 +8,37 @@ import { and, eq } from "drizzle-orm";
 import { potsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 
+export interface Pot {
+  id: number;
+  name: string;
+  target: number;
+  theme: string;
+  totalSaved: number;
+}
+
+export const getPots = async (): Promise<
+  { success: true; pots: Pot[] } | { success: false; message: string }
+> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const pots = await db
+      .select()
+      .from(potsTable)
+      .where(eq(potsTable.userId, session.session.userId));
+
+    return { success: true, pots };
+  } catch {
+    return { success: false, message: "Failed to fetch budgets" };
+  }
+};
+
 export const createPot = async (newPot: PotsFormSchema) => {
   const isValid = potsSchema.safeParse(newPot);
 
@@ -43,6 +74,7 @@ export const createPot = async (newPot: PotsFormSchema) => {
       target: newPot.target,
       theme: newPot.theme,
       userId: session.session.userId,
+      totalSaved: 0,
     });
 
     revalidatePath("/pots");

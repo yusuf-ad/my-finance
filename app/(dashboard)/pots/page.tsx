@@ -24,7 +24,7 @@ async function PotsPage() {
             You haven&apos;t created a pot yet.
           </p>
         ) : (
-          <ul className="flex flex-wrap gap-4">
+          <ul className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {pots.map((pot) => (
               <PotsCard key={pot.id} pot={pot} />
             ))}

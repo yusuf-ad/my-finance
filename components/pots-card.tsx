@@ -1,11 +1,11 @@
-import { Plus } from "lucide-react";
 import { Dots } from "./icons";
 import { Button } from "./ui/button";
 import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
+import AddMoneyModal from "./add-money-modal";
 
 function PotsCard({ pot }: { pot: Pot }) {
-  const { code, color } = parseTheme(pot.theme);
+  const { code } = parseTheme(pot.theme);
 
   return (
     <li className=" bg-white p-6 rounded-lg shadow-sm flex-1">
@@ -22,7 +22,7 @@ function PotsCard({ pot }: { pot: Pot }) {
 
       <div className="space-y-4 my-8">
         <div className="flex justify-between items-center">
-          <h4 className="font-semibold text-gray-700">Total Saved</h4>
+          <h4 className="font-semibold text-gray-500">Total Saved</h4>
 
           <span className="text-3xl tracking-wide font-bold text-gray-900">
             ${pot.totalSaved.toFixed(2)}
@@ -33,22 +33,22 @@ function PotsCard({ pot }: { pot: Pot }) {
           <div
             className="h-2.5 rounded-l-full transition-all duration-500"
             style={{
-              width: `10%`,
-              backgroundColor: `red`,
+              width: `${pot.totalSaved / pot.target}%`,
+              backgroundColor: code,
             }}
           ></div>
         </div>
 
         <div className="flex justify-between text-sm">
-          <p className="text-gray-600">91.67% saved</p>
+          <p className="text-gray-600">
+            {(pot.totalSaved / pot.target).toFixed(2)}% saved
+          </p>
           <p className="text-gray-600">Target of ${pot.target}</p>
         </div>
       </div>
 
       <div className="flex gap-4">
-        <Button className="flex-1 py-6 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black">
-          <Plus /> Add Money
-        </Button>
+        <AddMoneyModal pot={pot} />
 
         <Button className="flex-1 py-6 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black">
           Withdraw

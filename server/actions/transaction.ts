@@ -7,6 +7,7 @@ import { newTransactionSchema } from "@/lib/validations";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { updateBalance } from "./balance";
 
 export interface Transaction {
   id: number;
@@ -178,6 +179,14 @@ export const createTransaction = async (transaction: NewTransaction) => {
       isIncome: transaction.isIncome,
       userId: session.session.userId,
     });
+
+    const updateResult = await updateBalance({
+      amount: transaction.isIncome ? transaction.amount : -transaction.amount,
+    });
+
+    if (!updateResult.success) {
+      throw new Error("Failed to update balance");
+    }
 
     revalidatePath("/transactions");
 

@@ -77,3 +77,9 @@ export const potsSchema = z.object({
 });
 
 export type PotsFormSchema = z.infer<typeof potsSchema>;
+
+export const addMoneySchema = z.object({
+  amount: z.number().min(1),
+});
+
+export type AddMoneyFormSchema = z.infer<typeof addMoneySchema>;

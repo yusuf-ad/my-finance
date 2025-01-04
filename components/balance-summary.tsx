@@ -13,7 +13,7 @@ async function BalanceSummary() {
     <div className="my-8 flex flex-col lg:flex-row  justify-between gap-4">
       <div className="bg-dark text-white py-6 px-8 rounded-lg w-full">
         <h2 className="mb-3 text-sm">Current Balance</h2>
-        <p className="text-3xl font-bold">${balance?.toFixed(2)} </p>
+        <p className="text-3xl font-bold">${balance?.amount.toFixed(2)} </p>
       </div>
 
       <div className="bg-white py-6 px-8 rounded-lg w-full">

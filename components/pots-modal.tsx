@@ -37,6 +37,7 @@ function PotsModal() {
       name: "",
       target: 0,
       theme: "",
+      totalSaved: 0,
     },
   });
 

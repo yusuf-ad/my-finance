@@ -9,8 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
-import { z } from "zod";
+import { Loader2, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
@@ -18,15 +17,13 @@ import clsx from "clsx";
 import { Input } from "./ui/input";
 import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
-
-const addMoneySchema = z.object({
-  amount: z.number().min(1),
-});
+import { toast } from "@/hooks/use-toast";
+import { AddMoneyFormSchema, addMoneySchema } from "@/lib/validations";
 
 function AddMoneyModal({ pot }: { pot: Pot }) {
   const { code } = parseTheme(pot.theme);
 
-  const form = useForm<z.infer<typeof addMoneySchema>>({
+  const form = useForm<AddMoneyFormSchema>({
     resolver: zodResolver(addMoneySchema),
     defaultValues: {
       amount: 0,
@@ -36,8 +33,26 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
   const amount = form.watch("amount") || 0;
   const newPercentage = ((pot.totalSaved + amount) / pot.target) * 100;
 
-  async function onSubmit(values: z.infer<typeof addMoneySchema>) {
-    console.log(values);
+  async function onSubmit(values: AddMoneyFormSchema) {
+    const res = {
+      success: true,
+      message: "Money added successfully",
+    };
+
+    if (res.success) {
+      toast({
+        title: "Success",
+        description: res.message,
+      });
+    }
+
+    if (!res.success) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message,
+      });
+    }
   }
 
   return (
@@ -131,8 +146,19 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
               )}
             />
 
-            <Button className="w-full py-6 font-bold mt-6" type="submit">
-              Confirm Addition
+            <Button
+              disabled={form.formState.isSubmitting}
+              className="w-full py-6 font-bold mt-6"
+              type="submit"
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Submitting
+                </>
+              ) : (
+                "Confirm Addition"
+              )}
             </Button>
           </form>
         </Form>

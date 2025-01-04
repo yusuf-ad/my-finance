@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { signUp } from "@/lib/auth-client";
 import { SignupFormSchema, signupSchema } from "@/lib/validations";
+import { createBalance } from "@/server/actions/balance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
@@ -42,7 +43,9 @@ function SignupPage() {
         password: values.password,
       },
       {
-        onSuccess: (ctx) => {
+        onSuccess: async (ctx) => {
+          await createBalance();
+
           router.replace("/");
         },
         onError: (ctx) => {
@@ -50,6 +53,13 @@ function SignupPage() {
             variant: "destructive",
             title: "Failed to create account",
             description: ctx.error.message,
+          });
+        },
+        onRequest: () => {
+          toast({
+            variant: "default",
+            title: "Creating account",
+            description: "Please wait",
           });
         },
       }

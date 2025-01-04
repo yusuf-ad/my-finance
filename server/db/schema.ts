@@ -36,6 +36,13 @@ export const potsTable = pgTable("pots", {
   totalSaved: integer().notNull().default(0),
 });
 
+export const balanceTable = pgTable("balance", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: text("userId").references(() => user.id),
+  amount: integer().notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+});
+
 // better-auth schema
 
 export const user = pgTable("user", {

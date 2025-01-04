@@ -28,7 +28,7 @@ import { createPot } from "@/server/actions/pots";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-function PotsModal() {
+function PotsModal({ selectedThemes }: { selectedThemes: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<PotsFormSchema>({
@@ -178,7 +178,7 @@ function PotsModal() {
                         return (
                           <SelectItem
                             key={color}
-                            // disabled={selectedThemes.includes(theme)}
+                            disabled={selectedThemes.includes(theme)}
                             value={`${color}${code}`}
                           >
                             <div className="flex gap-2 items-center">
@@ -188,8 +188,8 @@ function PotsModal() {
                               ></div>
                               <span className="capitalize">
                                 {color}{" "}
-                                {/* {selectedThemes.includes(theme) &&
-                                  "(Already used)"}{" "} */}
+                                {selectedThemes.includes(theme) &&
+                                  "(Already used)"}{" "}
                               </span>
                             </div>
                           </SelectItem>

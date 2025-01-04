@@ -33,7 +33,7 @@ function PotsCard({ pot }: { pot: Pot }) {
           <div
             className="h-2.5 rounded-l-full transition-all duration-500"
             style={{
-              width: `${pot.totalSaved / pot.target}%`,
+              width: `${(pot.totalSaved / pot.target) * 100}%`,
               backgroundColor: code,
             }}
           ></div>
@@ -41,7 +41,7 @@ function PotsCard({ pot }: { pot: Pot }) {
 
         <div className="flex justify-between text-sm">
           <p className="text-gray-600">
-            {(pot.totalSaved / pot.target).toFixed(2)}% saved
+            {((pot.totalSaved / pot.target) * 100).toFixed(2)}% saved
           </p>
           <p className="text-gray-600">Target of ${pot.target}</p>
         </div>

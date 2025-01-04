@@ -6,7 +6,25 @@ import { db } from "../db/drizzle";
 import { balanceTable, transactionsTable } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
 
-export const getBalance = async () => {
+interface Balance {
+  id: number;
+  userId: string | null;
+  amount: number;
+  updatedAt: Date;
+}
+
+export const getBalance = async (): Promise<
+  | {
+      success: true;
+      balance: Balance;
+      income: number;
+      expenses: number;
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -16,6 +34,15 @@ export const getBalance = async () => {
   }
 
   try {
+    const [balance] = await db
+      .select()
+      .from(balanceTable)
+      .where(eq(balanceTable.userId, session.session.userId));
+
+    if (!balance) {
+      return { success: false, message: "Balance not found" };
+    }
+
     const transactions = await db
       .select()
       .from(transactionsTable)
@@ -29,12 +56,7 @@ export const getBalance = async () => {
       return transaction.isIncome ? acc : acc + transaction.amount;
     }, 0);
 
-    const [balance] = await db
-      .select()
-      .from(balanceTable)
-      .where(eq(balanceTable.userId, session.session.userId));
-
-    return { success: true, balance: balance, income, expenses };
+    return { success: true, balance, income, expenses };
   } catch {
     return {
       success: false,

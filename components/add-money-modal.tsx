@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import clsx from "clsx";
 import { Input } from "./ui/input";
-import { Pot } from "@/server/actions/pots";
+import { addMoney, Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { AddMoneyFormSchema, addMoneySchema } from "@/lib/validations";
@@ -34,10 +34,10 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
   const newPercentage = ((pot.totalSaved + amount) / pot.target) * 100;
 
   async function onSubmit(values: AddMoneyFormSchema) {
-    const res = {
-      success: true,
-      message: "Money added successfully",
-    };
+    const res = await addMoney({
+      amount: values.amount,
+      potId: pot.id,
+    });
 
     if (res.success) {
       toast({

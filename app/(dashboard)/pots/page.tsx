@@ -15,7 +15,7 @@ async function PotsPage() {
   return (
     <>
       <Header title="Pots">
-        <PotsModal />
+        <PotsModal selectedThemes={pots.map((pot) => pot.theme)} />
       </Header>
 
       <section className="my-8">

@@ -7,6 +7,7 @@ import { db } from "../db/drizzle";
 import { and, eq } from "drizzle-orm";
 import { potsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
+import { getBalance, updateBalance } from "./balance";
 
 export interface Pot {
   id: number;
@@ -82,5 +83,62 @@ export const createPot = async (newPot: PotsFormSchema) => {
     return { success: true, message: "Pot created successfully" };
   } catch {
     return { success: false, message: "Failed to create pot" };
+  }
+};
+
+export const addMoney = async ({
+  potId,
+  amount,
+}: {
+  potId: number;
+  amount: number;
+}) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const pot = await db
+      .select()
+      .from(potsTable)
+      .where(
+        and(
+          eq(potsTable.id, potId),
+          eq(potsTable.userId, session.session.userId)
+        )
+      );
+
+    if (pot.length === 0) {
+      return { success: false, message: "Pot not found" };
+    }
+
+    const balanceData = await getBalance();
+
+    if (!balanceData.success) {
+      throw new Error("Failed to fetch balance");
+    }
+
+    if (balanceData.balance?.amount < amount) {
+      return { success: false, message: "Insufficient balance" };
+    }
+
+    const updatedTotal = pot[0].totalSaved + amount;
+
+    await db
+      .update(potsTable)
+      .set({ totalSaved: updatedTotal })
+      .where(eq(potsTable.id, potId));
+
+    await updateBalance({ amount: amount * -1 });
+
+    revalidatePath("/pots");
+
+    return { success: true, message: "Money added successfully" };
+  } catch {
+    return { success: false, message: "Failed to add money" };
   }
 };

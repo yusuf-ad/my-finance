@@ -142,3 +142,59 @@ export const addMoney = async ({
     return { success: false, message: "Failed to add money" };
   }
 };
+
+export const withdrawMoney = async ({
+  potId,
+  amount,
+}: {
+  potId: number;
+  amount: number;
+}) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const pot = await db
+      .select()
+      .from(potsTable)
+      .where(
+        and(
+          eq(potsTable.id, potId),
+          eq(potsTable.userId, session.session.userId)
+        )
+      );
+
+    if (pot.length === 0) {
+      return { success: false, message: "Pot not found" };
+    }
+
+    if (pot[0].totalSaved < amount) {
+      return { success: false, message: "Insufficient balance" };
+    }
+
+    const updatedTotal = pot[0].totalSaved - amount;
+
+    const [potsData, isUpdated] = await Promise.all([
+      db
+        .update(potsTable)
+        .set({ totalSaved: updatedTotal })
+        .where(eq(potsTable.id, potId)),
+      updateBalance({ amount }),
+    ]);
+
+    if (!isUpdated.success) {
+      throw new Error("Failed to update balance");
+    }
+
+    revalidatePath("/pots");
+
+    return { success: true, message: "Money withdrawn successfully" };
+  } catch {
+    return { success: false, message: "Failed to withdraw money" };
+  }
+};

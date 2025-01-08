@@ -9,17 +9,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import clsx from "clsx";
 import { Input } from "./ui/input";
-import { Pot } from "@/server/actions/pots";
+import { Pot, withdrawMoney } from "@/server/actions/pots";
 import { toast } from "@/hooks/use-toast";
 import { AddMoneyFormSchema, addMoneySchema } from "@/lib/validations";
+import { useState } from "react";
 
 function WithdrawModal({ pot }: { pot: Pot }) {
+  const [isActive, setIsActive] = useState(false);
   const form = useForm<AddMoneyFormSchema>({
     resolver: zodResolver(addMoneySchema),
     defaultValues: {
@@ -31,16 +33,18 @@ function WithdrawModal({ pot }: { pot: Pot }) {
   const newPercentage = ((pot.totalSaved - amount) / pot.target) * 100;
 
   async function onSubmit(values: AddMoneyFormSchema) {
-    const res = {
-      success: true,
-      message: "Withdrawal successful",
-    };
+    const res = await withdrawMoney({
+      potId: pot.id,
+      amount: values.amount,
+    });
 
     if (res.success) {
       toast({
         title: "Success",
         description: res.message,
       });
+      form.reset();
+      setIsActive(false);
     }
 
     if (!res.success) {
@@ -53,7 +57,7 @@ function WithdrawModal({ pot }: { pot: Pot }) {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isActive} onOpenChange={setIsActive}>
       <DialogTrigger asChild>
         <Button className="flex-1 py-6 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black">
           Withdraw

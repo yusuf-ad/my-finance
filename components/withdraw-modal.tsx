@@ -15,15 +15,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import clsx from "clsx";
 import { Input } from "./ui/input";
-import { addMoney, Pot } from "@/server/actions/pots";
-import { parseTheme } from "@/lib/utils";
+import { Pot } from "@/server/actions/pots";
 import { toast } from "@/hooks/use-toast";
 import { AddMoneyFormSchema, addMoneySchema } from "@/lib/validations";
-import { useState } from "react";
 
-function AddMoneyModal({ pot }: { pot: Pot }) {
-  const [isActive, setIsActive] = useState(false);
-
+function WithdrawModal({ pot }: { pot: Pot }) {
   const form = useForm<AddMoneyFormSchema>({
     resolver: zodResolver(addMoneySchema),
     defaultValues: {
@@ -32,22 +28,19 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
   });
 
   const amount = form.watch("amount") || 0;
-  const newPercentage = ((pot.totalSaved + amount) / pot.target) * 100;
+  const newPercentage = ((pot.totalSaved - amount) / pot.target) * 100;
 
   async function onSubmit(values: AddMoneyFormSchema) {
-    const res = await addMoney({
-      amount: values.amount,
-      potId: pot.id,
-    });
+    const res = {
+      success: true,
+      message: "Withdrawal successful",
+    };
 
     if (res.success) {
       toast({
         title: "Success",
         description: res.message,
       });
-
-      form.reset();
-      setIsActive(false);
     }
 
     if (!res.success) {
@@ -60,19 +53,18 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
   }
 
   return (
-    <Dialog open={isActive} onOpenChange={setIsActive}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button className="flex-1 py-6 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black">
-          <Plus /> Add Money
+          Withdraw
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add to &quot;{pot.name}&quot;</DialogTitle>
+          <DialogTitle>Withdraw from &quot;{pot.name}&quot;</DialogTitle>
           <DialogDescription>
-            Add money to your pot to keep it separate from your main balance. As
-            soon as you add this money, it will be deducted from your current
-            balance.
+            Withdraw from your pot to put money back in your main balance. This
+            will reduce the amount you have in this pot.
           </DialogDescription>
         </DialogHeader>
 
@@ -82,27 +74,27 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
               <div className="flex justify-between items-center">
                 <h4 className="font-semibold text-gray-500">New Amount</h4>
                 <span className="text-3xl tracking-wide font-bold text-gray-900">
-                  ${(pot.totalSaved + amount).toFixed(2)}
+                  ${(pot.totalSaved - amount).toFixed(2)}
                 </span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden relative">
                 <div
-                  className="h-2.5 rounded-l-full transition-all duration-500 absolute inset-0 z-50"
+                  className="h-2.5 rounded-l-full transition-all duration-500 absolute inset-0 "
                   style={{
                     width: `${(pot.totalSaved / pot.target) * 100}%`,
-                    backgroundColor: "#37b24d",
+                    backgroundColor: "#ffc9c9",
                   }}
                 ></div>
                 <div
                   className="h-2.5 rounded-l-full transition-all duration-500 absolute inset-0"
                   style={{
                     width: `${newPercentage}%`,
-                    backgroundColor: "#b2f2bb",
+                    backgroundColor: "#f03e3e",
                   }}
                 ></div>
               </div>
               <div className="flex justify-between text-sm">
-                <p className="text-green-700">{newPercentage.toFixed(2)}%</p>
+                <p className="text-red-700">{newPercentage.toFixed(2)}%</p>
                 <p className="text-gray-600">Target of ${pot.target}</p>
               </div>
             </div>
@@ -118,7 +110,7 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
                       "text-red-500": form.formState.errors.amount,
                     })}
                   >
-                    Amount to Add
+                    Amount to Withdraw
                   </label>
                   <FormControl>
                     <Input
@@ -134,8 +126,8 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
                           field.onChange(Number(value));
                         }
 
-                        if (pot.totalSaved + Number(value) > pot.target) {
-                          field.onChange(pot.target - pot.totalSaved);
+                        if (pot.totalSaved - Number(value) < 0) {
+                          field.onChange(pot.totalSaved);
                         }
 
                         if (Number(value) < 0) {
@@ -161,7 +153,7 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
                   Submitting
                 </>
               ) : (
-                "Confirm Addition"
+                "Confirm Withdrawal"
               )}
             </Button>
           </form>
@@ -171,4 +163,4 @@ function AddMoneyModal({ pot }: { pot: Pot }) {
   );
 }
 
-export default AddMoneyModal;
+export default WithdrawModal;

@@ -1,8 +1,8 @@
 import { Dots } from "./icons";
-import { Button } from "./ui/button";
 import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
 import AddMoneyModal from "./add-money-modal";
+import WithdrawModal from "./withdraw-modal";
 
 function PotsCard({ pot }: { pot: Pot }) {
   const { code } = parseTheme(pot.theme);
@@ -50,9 +50,7 @@ function PotsCard({ pot }: { pot: Pot }) {
       <div className="flex gap-4">
         <AddMoneyModal pot={pot} />
 
-        <Button className="flex-1 py-6 font-bold bg-lightBeige text-gray-900 hover:bg-white  border-2 border-transparent hover:border-black">
-          Withdraw
-        </Button>
+        <WithdrawModal pot={pot} />
       </div>
     </li>
   );

@@ -4,10 +4,12 @@ import Header from "@/components/header";
 import { CaretRight, JarLight } from "@/components/icons";
 import LogoutButton from "@/components/logout-button";
 import SkeletonBalance from "@/components/skeletons/skeleton-balance";
+import SkeletonBills from "@/components/skeletons/skeleton-bills";
 import SkeletonBudgets from "@/components/skeletons/skeleton-budgets";
 import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
 import { Spending } from "@/components/spending-list";
 import { parseTheme } from "@/lib/utils";
+import { getRecurringBills } from "@/server/actions/bills";
 import { getBudgets } from "@/server/actions/budget";
 import {
   getLatestTransactions,
@@ -41,7 +43,9 @@ function HomePage() {
             <Budgets />
           </Suspense>
 
-          <Bills />
+          <Suspense fallback={<SkeletonBills />}>
+            <Bills />
+          </Suspense>
         </div>
       </div>
     </div>
@@ -202,9 +206,66 @@ async function Budgets() {
   );
 }
 
-function Bills() {
+async function Bills() {
+  const res = await getRecurringBills();
+
+  let content;
+
+  if (!res.success) {
+    content = (
+      <p className="capitalize text-gray-400 text-sm font-bold">
+        {res.message}
+      </p>
+    );
+  }
+
+  if (res.success) {
+    const paidBills = res.bills
+      .filter(
+        (transaction) =>
+          !transaction.isIncome && new Date(transaction.date) < new Date()
+      )
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+    const totalUpcoming = res.bills
+      .filter(
+        (transaction) =>
+          !transaction.isIncome && new Date(transaction.date) >= new Date()
+      )
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+    const dueSoon = res.bills
+      .filter(
+        (transaction) =>
+          !transaction.isIncome &&
+          new Date(transaction.date).getTime() - new Date().getTime() <=
+            7 * 24 * 60 * 60 * 1000 &&
+          new Date(transaction.date) >= new Date()
+      )
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+    content = (
+      <>
+        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-teal flex justify-between items-center px-4 py-3">
+          <p className="text-gray-500 text-sm capitalize">Paid bills</p>
+          <p className=" font-bold text-gray-900">${paidBills.toFixed(2)}</p>
+        </div>
+        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-peach flex justify-between items-center px-4 py-3">
+          <p className="text-gray-500 text-sm capitalize">Total upcoming</p>
+          <p className=" font-bold text-gray-900">
+            ${totalUpcoming.toFixed(2)}
+          </p>
+        </div>
+        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-skyBlue flex justify-between items-center px-4 py-3">
+          <p className="text-gray-500 text-sm capitalize">Due soon</p>
+          <p className=" font-bold text-gray-900">${dueSoon.toFixed(2)}</p>
+        </div>
+      </>
+    );
+  }
+
   return (
-    <div className="bg-white py-6 px-6 rounded-lg ">
+    <div className="bg-white py-6 px-6 rounded-lg min-h-[270px]">
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">Recurring Bills</h3>
 
@@ -217,25 +278,7 @@ function Bills() {
         </Link>
       </div>
 
-      <div className="mt-4 space-y-4">
-        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-teal flex justify-between items-center px-4 py-3">
-          <p className="text-gray-500 text-sm capitalize">Paid bills</p>
-
-          <p className=" font-bold text-gray-900">$0.00</p>
-        </div>
-
-        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-peach flex justify-between items-center px-4 py-3">
-          <p className="text-gray-500 text-sm capitalize">Total upcoming</p>
-
-          <p className=" font-bold text-gray-900">$0.00</p>
-        </div>
-
-        <div className="bg-lightBeige w-full rounded-lg border-l-4 border-l-skyBlue flex justify-between items-center px-4 py-3">
-          <p className="text-gray-500 text-sm capitalize">Due soon</p>
-
-          <p className=" font-bold text-gray-900">$0.00</p>
-        </div>
-      </div>
+      <div className="mt-4 space-y-4">{content}</div>
     </div>
   );
 }

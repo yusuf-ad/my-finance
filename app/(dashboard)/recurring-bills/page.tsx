@@ -1,17 +1,31 @@
 import BillsTable from "@/components/bills-table";
 import FilterSelect from "@/components/filter-select";
 import Header from "@/components/header";
-import { CaretRight, Receipt2 } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { Receipt2 } from "@/components/icons";
+import TablePagination from "@/components/table-pagination";
 import { Input } from "@/components/ui/input";
+import { getBills } from "@/server/actions/bills";
 
-function BillsPage() {
+async function BillsPage() {
+  const bills = await getBills();
+
+  if (!bills.success) {
+    return (
+      <>
+        <Header title="Recurring Bills" />
+        <section className="my-8">
+          <p className="text-gray-400 font-bold mt-8">Failed to fetch bills</p>
+        </section>
+      </>
+    );
+  }
+
   return (
     <>
       <Header title="Recurring Bills" />
 
       <section className="flex flex-col lg:flex-row mt-8 gap-6 items-start">
-        <div className="space-y-6 max-w-80 w-full">
+        <div className="space-y-6 lg:max-w-80 w-full">
           <div className="bg-dark text-white py-8 px-6 rounded-lg w-full">
             <Receipt2 />
 
@@ -38,7 +52,7 @@ function BillsPage() {
                 <span className="text-gray-900 text-sm">$0.00</span>
               </li>
               <li className="flex justify-between py-4 border-b last:border-b-0 last:pb-0">
-                <h4 className="capitalize text-gray-500 text-sm">Paid bills</h4>
+                <h4 className="capitalize text-gray-500 text-sm">Due Soon</h4>
                 <span className="text-sm text-red-600">$0.00</span>
               </li>
             </ul>
@@ -56,25 +70,9 @@ function BillsPage() {
             </div>
           </div>
 
-          <BillsTable />
+          <BillsTable page={1} search="" />
 
-          <div className="flex justify-between mt-4">
-            <Button
-              disabled={true}
-              className="py-6 font-bold bg-lightBeige text-gray-900"
-            >
-              <CaretRight className="rotate-180" />
-              Prev
-            </Button>
-
-            <Button
-              disabled={true}
-              className="py-6 font-bold bg-lightBeige text-gray-900"
-            >
-              Next
-              <CaretRight />
-            </Button>
-          </div>
+          <TablePagination totalPages={0} />
         </div>
       </section>
     </>

@@ -2,31 +2,70 @@ import {
   Table,
   TableBody,
   TableCaption,
-  //   TableCell,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { page_size } from "@/lib/constants";
+import { getBills } from "@/server/actions/bills";
+import ActionsDropdown from "./actions-dropdown";
 
-function BillsTable() {
-  return (
-    <Table>
+async function BillsTable({ page, search }: { page: number; search: string }) {
+  const response = await getBills({
+    page,
+    getBy: search,
+    pageSize: page_size,
+  });
+
+  if (!response.success) {
+    return (
+      <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
+        {response.message}
+      </TableCaption>
+    );
+  }
+
+  const { bills } = response;
+
+  if (bills.length === 0) {
+    return (
       <TableCaption className="hover:bg-muted/50 py-8 mt-0 text-gray-900">
         No results.
       </TableCaption>
+    );
+  }
+
+  return (
+    <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[200px] max-w-[200px]">Bill Title</TableHead>
+          <TableHead className="w-[200px]">Bill Title</TableHead>
           <TableHead>Due Date</TableHead>
           <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right"></TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
-        <TableRow>
-          {/* <TableCell className="w-[100px] font-medium">INV001</TableCell>
-          <TableCell>Paid deneme</TableCell>
-          <TableCell className="text-right">$250.00</TableCell> */}
-        </TableRow>
+        {bills.map((bill) => (
+          <TableRow key={bill.id}>
+            <TableCell className="w-[200px]">{bill.name}</TableCell>
+            <TableCell> {new Date(bill.date).toLocaleDateString()}</TableCell>
+            {bill.isIncome ? (
+              <TableCell className="text-right font-semibold text-green-600">
+                +${bill.amount.toFixed(2)}
+              </TableCell>
+            ) : (
+              <TableCell className="text-right font-semibold">
+                -${bill.amount.toFixed(2)}
+              </TableCell>
+            )}
+            <TableCell className="text-right">
+              <ActionsDropdown options={["Edit", "Delete", "Mark as income"]} />
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

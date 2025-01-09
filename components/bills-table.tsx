@@ -10,6 +10,7 @@ import {
 import { page_size } from "@/lib/constants";
 import ActionsDropdown from "./actions-dropdown";
 import { getRecurringBills } from "@/server/actions/bills";
+import { getOrdinalSuffix } from "@/lib/utils";
 
 async function BillsTable({ page, search }: { page: number; search: string }) {
   const response = await getRecurringBills({
@@ -51,7 +52,12 @@ async function BillsTable({ page, search }: { page: number; search: string }) {
         {bills.map((bill) => (
           <TableRow key={bill.id}>
             <TableCell className="w-[200px]">{bill.name}</TableCell>
-            <TableCell> {new Date(bill.date).toLocaleDateString()}</TableCell>
+
+            <TableCell className="text-gray-500">
+              {`Monthly - ${bill.date.getDate()}${getOrdinalSuffix(
+                bill.date.getDate()
+              )}`}
+            </TableCell>
             {bill.isIncome ? (
               <TableCell className="text-right font-semibold text-green-600">
                 +${bill.amount.toFixed(2)}

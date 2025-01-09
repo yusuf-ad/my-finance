@@ -13,7 +13,13 @@ export function Spending({ spending }: { spending: Transaction }) {
         ) : (
           <span className="text-red-600">-${spending.amount.toFixed(2)}</span>
         )}
-        <span className="text-gray-600 font-normal text-xs">12/26/2024</span>
+        <span className="text-gray-600 font-medium text-xs">
+          {new Date(spending.date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </span>
       </div>
     </div>
   );

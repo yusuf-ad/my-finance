@@ -4,10 +4,10 @@ import Header from "@/components/header";
 import { Receipt2 } from "@/components/icons";
 import TablePagination from "@/components/table-pagination";
 import { Input } from "@/components/ui/input";
-import { getBills } from "@/server/actions/bills";
+import { getRecurringBills } from "@/server/actions/bills";
 
 async function BillsPage() {
-  const bills = await getBills();
+  const bills = await getRecurringBills();
 
   if (!bills.success) {
     return (
@@ -66,7 +66,16 @@ async function BillsPage() {
             </div>
             <div className="flex items-center gap-2">
               <label className="text-gray-500 text-sm">Sort by</label>
-              <FilterSelect options={["All", "Income", "Expense"]} />
+              <FilterSelect
+                options={[
+                  "Latest",
+                  "Oldest",
+                  "A to Z",
+                  "Z to A",
+                  "Highest",
+                  "Lowest",
+                ]}
+              />
             </div>
           </div>
 

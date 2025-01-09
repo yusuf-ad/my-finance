@@ -7,7 +7,7 @@ import { db } from "../db/drizzle";
 import { and, asc, eq, ilike } from "drizzle-orm";
 import { Transaction } from "./transaction";
 
-export const getBills = async ({
+export const getRecurringBills = async ({
   page = 1,
   pageSize = 10,
   getBy,
@@ -40,7 +40,6 @@ export const getBills = async ({
       .where(
         and(
           eq(transactionsTable.userId, session.session.userId),
-          eq(transactionsTable.category, "Bills"),
           eq(transactionsTable.recurring, true),
           getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
         )

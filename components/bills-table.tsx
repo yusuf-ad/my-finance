@@ -8,11 +8,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { page_size } from "@/lib/constants";
-import { getBills } from "@/server/actions/bills";
 import ActionsDropdown from "./actions-dropdown";
+import { getRecurringBills } from "@/server/actions/bills";
 
 async function BillsTable({ page, search }: { page: number; search: string }) {
-  const response = await getBills({
+  const response = await getRecurringBills({
     page,
     getBy: search,
     pageSize: page_size,

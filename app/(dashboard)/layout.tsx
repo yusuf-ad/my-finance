@@ -6,11 +6,13 @@ function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       <Sidebar />
 
-      <main className="min-h-screen w-full -order-1 lg:order-1">
-        <div className="flex-1 p-10 max-w-screen-2xl mx-auto">{children}</div>
+      <main className="h-screen w-full -order-1 lg:order-1">
+        <div className="flex-1 p-10 max-w-screen-2xl mx-auto h-full">
+          {children}
+        </div>
       </main>
     </div>
   );

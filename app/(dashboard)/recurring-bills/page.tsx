@@ -2,8 +2,10 @@ import BillsSummary from "@/components/bills-summary";
 import BillsTable from "@/components/bills-table";
 import FilterSelect from "@/components/filter-select";
 import Header from "@/components/header";
+import SkeletonBillSummary from "@/components/skeletons/skeleton-bill-summary";
 import TablePagination from "@/components/table-pagination";
 import { Input } from "@/components/ui/input";
+import { Suspense } from "react";
 
 function BillsPage() {
   return (
@@ -11,7 +13,9 @@ function BillsPage() {
       <Header title="Recurring Bills" />
 
       <section className="flex flex-col lg:flex-row mt-8 gap-6 items-start">
-        <BillsSummary />
+        <Suspense fallback={<SkeletonBillSummary />}>
+          <BillsSummary />
+        </Suspense>
 
         <div className="bg-white w-full py-8 px-6 rounded-lg">
           <div className="flex justify-between mb-8 gap-2">

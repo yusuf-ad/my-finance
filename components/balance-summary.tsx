@@ -4,7 +4,13 @@ async function BalanceSummary() {
   const res = await getBalance();
 
   if (!res.success) {
-    return null;
+    return (
+      <section className="my-8">
+        <p className="text-gray-400 font-bold mt-8">
+          Failed to fetch balance data
+        </p>
+      </section>
+    );
   }
 
   const { balance, income, expenses } = res;

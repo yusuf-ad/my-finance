@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowFatLinesLeft,
   ArrowsDownUp,
@@ -43,14 +43,19 @@ const navLinks = [
 ];
 
 function Sidebar() {
-  const [isActive, setIsActive] = useState(() => {
+  const [isActive, setIsActive] = useState(true);
+
+  useEffect(() => {
     const sidebar = localStorage.getItem("sidebar");
-    return sidebar ? JSON.parse(sidebar) : true;
-  });
+    if (sidebar !== null) {
+      setIsActive(JSON.parse(sidebar));
+    }
+  }, []);
 
   const handleToggle = () => {
-    localStorage.setItem("sidebar", JSON.stringify(!isActive));
-    setIsActive(!isActive);
+    const newValue = !isActive;
+    localStorage.setItem("sidebar", JSON.stringify(newValue));
+    setIsActive(newValue);
   };
 
   return (

@@ -43,9 +43,13 @@ const navLinks = [
 ];
 
 function Sidebar() {
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(() => {
+    const sidebar = localStorage.getItem("sidebar");
+    return sidebar ? JSON.parse(sidebar) : true;
+  });
 
   const handleToggle = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!isActive));
     setIsActive(!isActive);
   };
 

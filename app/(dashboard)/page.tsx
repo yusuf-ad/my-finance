@@ -8,9 +8,6 @@ import BudgetsChart from "@/components/budgets-chart";
 import { Spending } from "@/components/spending-list";
 
 import SkeletonBalance from "@/components/skeletons/skeleton-balance";
-import SkeletonBills from "@/components/skeletons/skeleton-bills";
-import SkeletonBudgets from "@/components/skeletons/skeleton-budgets";
-import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
 
 import { CaretRight, JarLight } from "@/components/icons";
 
@@ -23,6 +20,7 @@ import {
   getLatestTransactions,
   getSpendings,
 } from "@/server/actions/transaction";
+import SkeletonDashboardCard from "@/components/skeletons/skeleton-dashboard-card";
 
 function HomePage() {
   return (
@@ -37,19 +35,47 @@ function HomePage() {
 
       <div className="flex gap-4 flex-col lg:flex-row">
         <div className="w-full space-y-4">
-          <Pots />
+          <Suspense
+            fallback={<SkeletonDashboardCard title="Pots" href="/pots" />}
+          >
+            <Pots />
+          </Suspense>
 
-          <Suspense fallback={<SkeletonTransactions />}>
+          <Suspense
+            fallback={
+              <SkeletonDashboardCard
+                title="Transactions"
+                href="/transactions"
+                minHeight="180px"
+              />
+            }
+          >
             <Transactions />
           </Suspense>
         </div>
 
         <div className="w-full space-y-4">
-          <Suspense fallback={<SkeletonBudgets />}>
+          <Suspense
+            fallback={
+              <SkeletonDashboardCard
+                minHeight="270px"
+                title="Budgets"
+                href="/budgets"
+              />
+            }
+          >
             <Budgets />
           </Suspense>
 
-          <Suspense fallback={<SkeletonBills />}>
+          <Suspense
+            fallback={
+              <SkeletonDashboardCard
+                title="Recurring Bills"
+                href="/recurring-bills"
+                minHeight="270px"
+              />
+            }
+          >
             <Bills />
           </Suspense>
         </div>

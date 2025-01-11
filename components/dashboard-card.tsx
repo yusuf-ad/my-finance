@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CaretRight } from "./icons";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 interface DashboardCardProps {
   title: string;
@@ -26,7 +27,15 @@ function DashboardCard({
         </Link>
       </div>
 
-      <div className="mt-4">{children}</div>
+      <Suspense
+        fallback={
+          <div className="mt-4 flex items-center justify-center flex-grow">
+            <Loader2 className="animate-spin" size={32} />
+          </div>
+        }
+      >
+        <div className="mt-4">{children}</div>
+      </Suspense>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import LogoutButton from "@/components/logout-button";
 import BalanceSummary from "@/components/balance-summary";
 import DashboardCard from "@/components/dashboard-card";
 import SkeletonBalance from "@/components/skeletons/skeleton-balance";
-import SkeletonDashboardCard from "@/components/skeletons/skeleton-dashboard-card";
 
 import PotsContent from "@/components/dashboard/pots-content";
 import TransactionsContent from "@/components/dashboard/transactions-content";
@@ -24,65 +23,31 @@ export default function HomePage() {
 
       <div className="flex gap-4 flex-col lg:flex-row">
         <div className="w-full space-y-4">
-          <Suspense
-            fallback={<SkeletonDashboardCard title="Pots" href="/pots" />}
-          >
-            <DashboardCard title="Pots" href="/pots">
-              <PotsContent />
-            </DashboardCard>
-          </Suspense>
+          <DashboardCard title="Pots" href="/pots">
+            <PotsContent />
+          </DashboardCard>
 
-          <Suspense
-            fallback={
-              <SkeletonDashboardCard
-                title="Transactions"
-                href="/transactions"
-                minHeight="180px"
-              />
-            }
+          <DashboardCard
+            title="Transactions"
+            href="/transactions"
+            minHeight="180px"
           >
-            <DashboardCard
-              title="Transactions"
-              href="/transactions"
-              minHeight={"minHeight: 180px"}
-            >
-              <TransactionsContent />
-            </DashboardCard>
-          </Suspense>
+            <TransactionsContent />
+          </DashboardCard>
         </div>
 
         <div className="w-full space-y-4">
-          <Suspense
-            fallback={
-              <SkeletonDashboardCard
-                minHeight="270px"
-                title="Budgets"
-                href="/budgets"
-              />
-            }
-          >
-            <DashboardCard title="Budgets" href="/budgets" minHeight="270px">
-              <BudgetsContent />
-            </DashboardCard>
-          </Suspense>
+          <DashboardCard title="Budgets" href="/budgets" minHeight="270px">
+            <BudgetsContent />
+          </DashboardCard>
 
-          <Suspense
-            fallback={
-              <SkeletonDashboardCard
-                title="Recurring Bills"
-                href="/recurring-bills"
-                minHeight="270px"
-              />
-            }
+          <DashboardCard
+            title="Recurring Bills"
+            href="/recurring-bills"
+            minHeight="270px"
           >
-            <DashboardCard
-              title="Recurring Bills"
-              href="/recurring-bills"
-              minHeight="270px"
-            >
-              <BillsContent />
-            </DashboardCard>
-          </Suspense>
+            <BillsContent />
+          </DashboardCard>
         </div>
       </div>
     </div>

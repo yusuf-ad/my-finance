@@ -13,7 +13,7 @@ export default async function TransactionsContent() {
   }
 
   return (
-    <div className="space-y-4">
+    <div>
       {res.transactions.map((transaction) => (
         <Spending key={transaction.id} spending={transaction} />
       ))}

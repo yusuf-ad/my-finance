@@ -1,14 +1,21 @@
+import { Suspense } from "react";
+import Link from "next/link";
+
+import Header from "@/components/header";
+import LogoutButton from "@/components/logout-button";
 import BalanceSummary from "@/components/balance-summary";
 import BudgetsChart from "@/components/budgets-chart";
-import Header from "@/components/header";
-import { CaretRight, JarLight } from "@/components/icons";
-import LogoutButton from "@/components/logout-button";
+import { Spending } from "@/components/spending-list";
+
 import SkeletonBalance from "@/components/skeletons/skeleton-balance";
 import SkeletonBills from "@/components/skeletons/skeleton-bills";
 import SkeletonBudgets from "@/components/skeletons/skeleton-budgets";
 import SkeletonTransactions from "@/components/skeletons/skeleton-transactions";
-import { Spending } from "@/components/spending-list";
+
+import { CaretRight, JarLight } from "@/components/icons";
+
 import { parseTheme } from "@/lib/utils";
+
 import { getRecurringBills } from "@/server/actions/bills";
 import { getBudgets } from "@/server/actions/budget";
 import { getPots } from "@/server/actions/pots";
@@ -16,12 +23,10 @@ import {
   getLatestTransactions,
   getSpendings,
 } from "@/server/actions/transaction";
-import Link from "next/link";
-import { Suspense } from "react";
 
 function HomePage() {
   return (
-    <div>
+    <div className="pb-32 lg:pb-10">
       <Header title="Overview">
         <LogoutButton />
       </Header>
@@ -68,7 +73,7 @@ async function Pots() {
       </div>
 
       {!res.success ? (
-        <p className="text-gray-400 text-sm font-bold">{res.message}</p>
+        <p className="text-gray-400 text-sm font-bold mt-4">{res.message}</p>
       ) : res.pots.length > 0 ? (
         <div className="flex gap-4">
           <div className="bg-lightBeige w-1/2 px-4 py-4 flex items-center gap-4 mt-4 rounded-xl shadow-sm">
@@ -98,7 +103,7 @@ async function Pots() {
           </ul>
         </div>
       ) : (
-        <p className="capitalize text-gray-400 text-sm font-bold">
+        <p className="capitalize text-gray-400 text-sm font-bold mt-4">
           No data provided
         </p>
       )}

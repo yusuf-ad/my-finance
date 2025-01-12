@@ -119,7 +119,20 @@ export const getTransactions = async ({
   }
 };
 
-export const getSpendings = async ({ category }: { category: string }) => {
+export const getSpendings = async ({
+  category,
+}: {
+  category: string;
+}): Promise<
+  | {
+      success: true;
+      spendings: Transaction[];
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

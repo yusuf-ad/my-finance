@@ -20,21 +20,75 @@ export interface Transaction {
 }
 
 export type NewTransaction = Omit<Transaction, "id">;
+import { unstable_cache } from "next/cache";
+
+const getCachedTransactions = unstable_cache(
+  async (userId: string, page: number, pageSize: number, getBy?: string) => {
+    return await db
+      .select()
+      .from(transactionsTable)
+      .orderBy(asc(transactionsTable.id))
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .where(
+        and(
+          eq(transactionsTable.userId, userId),
+          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+        )
+      );
+  },
+  ["transactions"],
+  {
+    revalidate: 3600,
+    tags: ["transactions"],
+  }
+);
+
+const getCachedSpendings = unstable_cache(
+  async (userId: string, category: string) => {
+    const whereCondition =
+      category === "all"
+        ? eq(transactionsTable.userId, userId)
+        : and(
+            eq(transactionsTable.userId, userId),
+            eq(transactionsTable.category, category)
+          );
+
+    return await db.select().from(transactionsTable).where(whereCondition);
+  },
+  ["spendings"],
+  {
+    revalidate: 3600,
+    tags: ["transactions", "spendings"],
+  }
+);
+
+const getCachedTotalPages = unstable_cache(
+  async (userId: string, pageSize: number, getBy?: string) => {
+    return await db.$count(
+      transactionsTable,
+      and(
+        eq(transactionsTable.userId, userId),
+        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+      )
+    );
+  },
+  ["transactionCount"],
+  {
+    revalidate: 3600,
+    tags: ["transactions"],
+  }
+);
 
 export const getTransactions = async ({
   page = 1,
   pageSize = 10,
   getBy,
-}: { page?: number; pageSize?: number; getBy?: string } = {}): Promise<
-  | {
-      success: true;
-      transactions: Transaction[];
-    }
-  | {
-      success: false;
-      message: string;
-    }
-> => {
+}: {
+  page?: number;
+  pageSize?: number;
+  getBy?: string;
+} = {}) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -44,18 +98,12 @@ export const getTransactions = async ({
   }
 
   try {
-    const transactions = await db
-      .select()
-      .from(transactionsTable)
-      .orderBy(asc(transactionsTable.id))
-      .limit(pageSize)
-      .offset((page - 1) * pageSize)
-      .where(
-        and(
-          eq(transactionsTable.userId, session.session.userId),
-          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
-        )
-      );
+    const transactions = await getCachedTransactions(
+      session.session.userId,
+      page,
+      pageSize,
+      getBy
+    );
 
     const formattedTransactions = transactions.map((transaction) => ({
       ...transaction,
@@ -71,20 +119,7 @@ export const getTransactions = async ({
   }
 };
 
-export const getSpendings = async ({
-  category,
-}: {
-  category: string;
-}): Promise<
-  | {
-      success: true;
-      spendings: Transaction[];
-    }
-  | {
-      success: false;
-      message: string;
-    }
-> => {
+export const getSpendings = async ({ category }: { category: string }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -94,20 +129,10 @@ export const getSpendings = async ({
   }
 
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    const whereCondition =
-      category === "all"
-        ? eq(transactionsTable.userId, session.session.userId)
-        : and(
-            eq(transactionsTable.userId, session.session.userId),
-            eq(transactionsTable.category, category)
-          );
-
-    const spendings = await db
-      .select()
-      .from(transactionsTable)
-      .where(whereCondition);
+    const spendings = await getCachedSpendings(
+      session.session.userId,
+      category
+    );
 
     const formattedSpendings = spendings.map((spending) => ({
       ...spending,
@@ -139,17 +164,14 @@ export const getTotalPages = async ({
   }
 
   try {
-    const totalRows = await db.$count(
-      transactionsTable,
-      and(
-        eq(transactionsTable.userId, session.session.userId),
-        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
-      )
+    const totalRows = await getCachedTotalPages(
+      session.session.userId,
+      pageSize,
+      getBy
     );
 
-    const totalPages = Math.ceil(totalRows / pageSize);
-    return totalPages;
-  } catch (error) {
+    return Math.ceil(totalRows / pageSize);
+  } catch {
     return 0;
   }
 };

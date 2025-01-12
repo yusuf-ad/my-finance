@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { budgetsTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 
 export interface Budget {
   id: number;
@@ -15,12 +15,22 @@ export interface Budget {
   theme: string;
 }
 
+const getCachedBudgets = unstable_cache(
+  async (userId: string) => {
+    return await db
+      .select()
+      .from(budgetsTable)
+      .where(eq(budgetsTable.userId, userId));
+  },
+  ["budgets"],
+  {
+    revalidate: 3600, // 1 hour cache
+    tags: ["budgets"],
+  }
+);
+
 export const getBudgets = async (): Promise<
-  | {
-      success: true;
-      budgets: Budget[];
-    }
-  | { success: false; message: string }
+  { success: true; budgets: Budget[] } | { success: false; message: string }
 > => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -31,11 +41,7 @@ export const getBudgets = async (): Promise<
   }
 
   try {
-    const budgets = await db
-      .select()
-      .from(budgetsTable)
-      .where(eq(budgetsTable.userId, session.session.userId));
-
+    const budgets = await getCachedBudgets(session.session.userId);
     return { success: true, budgets };
   } catch {
     return { success: false, message: "Failed to fetch budgets" };

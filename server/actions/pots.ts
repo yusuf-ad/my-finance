@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { and, eq } from "drizzle-orm";
 import { potsTable } from "../db/schema";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { getBalance, updateBalance } from "./balance";
 
 export interface Pot {
@@ -16,6 +16,20 @@ export interface Pot {
   theme: string;
   totalSaved: number;
 }
+
+const getCachedPots = unstable_cache(
+  async (userId: string) => {
+    return await db
+      .select()
+      .from(potsTable)
+      .where(eq(potsTable.userId, userId));
+  },
+  ["pots"],
+  {
+    revalidate: 3600, // for 1 hour in seconds
+    tags: ["pots"],
+  }
+);
 
 export const getPots = async (): Promise<
   { success: true; pots: Pot[] } | { success: false; message: string }
@@ -29,14 +43,11 @@ export const getPots = async (): Promise<
   }
 
   try {
-    const pots = await db
-      .select()
-      .from(potsTable)
-      .where(eq(potsTable.userId, session.session.userId));
+    const pots = await getCachedPots(session.session.userId);
 
     return { success: true, pots };
   } catch {
-    return { success: false, message: "Failed to fetch budgets" };
+    return { success: false, message: "Failed to fetch pots" };
   }
 };
 

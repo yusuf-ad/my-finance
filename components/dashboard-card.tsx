@@ -21,7 +21,10 @@ function DashboardCard({
       <div className="flex justify-between">
         <h3 className="text-gray-900 font-bold text-xl">{title}</h3>
 
-        <Link href={href} className="flex items-center text-gray-500  gap-3">
+        <Link
+          href={href}
+          className="flex items-center text-gray-500 sm:gap-3 gap-1 text-nowrap"
+        >
           See Details
           <CaretRight />
         </Link>

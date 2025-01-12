@@ -10,7 +10,7 @@ function DashboardLayout({
       <Sidebar />
 
       <main className="h-screen w-full -order-1 lg:order-1 lg:overflow-y-scroll">
-        <div className="flex-1 p-10 max-w-screen-2xl mx-auto h-full">
+        <div className="flex-1 lg:p-10 p-4 py-6 max-w-screen-2xl mx-auto h-full">
           {children}
         </div>
       </main>

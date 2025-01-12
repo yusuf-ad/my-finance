@@ -43,7 +43,7 @@ const navLinks = [
 ];
 
 function Sidebar() {
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const sidebar = localStorage.getItem("sidebar");

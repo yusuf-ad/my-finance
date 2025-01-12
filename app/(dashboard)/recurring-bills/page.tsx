@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 function BillsPage() {
   return (
-    <>
+    <div className="pb-32 lg:pb-10">
       <Header title="Recurring Bills" />
 
       <section className="flex flex-col lg:flex-row mt-8 gap-6 items-start">
@@ -42,7 +42,7 @@ function BillsPage() {
           <TablePagination totalPages={0} />
         </div>
       </section>
-    </>
+    </div>
   );
 }
 

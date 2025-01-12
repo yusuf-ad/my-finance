@@ -22,7 +22,7 @@ async function TransactionsPage({
   });
 
   return (
-    <>
+    <div className="pb-32 lg:pb-10">
       <Header title="Transactions">
         <TransactionsModal />
       </Header>
@@ -67,7 +67,7 @@ async function TransactionsPage({
 
         <TablePagination totalPages={totalPages} />
       </section>
-    </>
+    </div>
   );
 }
 

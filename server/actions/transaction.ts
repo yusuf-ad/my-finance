@@ -27,7 +27,7 @@ const getCachedTransactions = unstable_cache(
     return await db
       .select()
       .from(transactionsTable)
-      .orderBy(asc(transactionsTable.id))
+      .orderBy(desc(transactionsTable.id))
       .limit(pageSize)
       .offset((page - 1) * pageSize)
       .where(

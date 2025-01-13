@@ -10,7 +10,7 @@ import {
 import { page_size } from "@/lib/constants";
 import { getTransactions } from "@/server/actions/transaction";
 import { Suspense } from "react";
-import ActionsDropdown from "./actions-dropdown";
+import ActionsDropdown from "../actions-dropdown";
 
 async function TableContent({
   page,

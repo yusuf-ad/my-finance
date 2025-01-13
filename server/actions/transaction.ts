@@ -88,7 +88,16 @@ export const getTransactions = async ({
   page?: number;
   pageSize?: number;
   getBy?: string;
-} = {}) => {
+} = {}): Promise<
+  | {
+      success: true;
+      transactions: Transaction[];
+    }
+  | {
+      success: false;
+      message: string;
+    }
+> => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

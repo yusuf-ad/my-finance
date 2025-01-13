@@ -13,7 +13,7 @@ async function PotsPage() {
   const { pots } = res;
 
   return (
-    <div className="pb-32 lg:pb-10">
+    <div className="pb-28 lg:pb-10">
       <Header title="Pots">
         <PotsModal selectedThemes={pots.map((pot) => pot.theme)} />
       </Header>

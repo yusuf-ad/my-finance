@@ -12,7 +12,7 @@ import BillsContent from "@/components/dashboard/bills-content";
 
 export default function HomePage() {
   return (
-    <div className="pb-32 lg:pb-10">
+    <div className="pb-28 lg:pb-10">
       <Header title="Overview">
         <LogoutButton />
       </Header>

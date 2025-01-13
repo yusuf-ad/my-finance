@@ -16,7 +16,7 @@ async function BudgetsPage() {
   const { budgets } = res;
 
   return (
-    <div className="pb-32 lg:pb-10">
+    <div className="pb-28 lg:pb-10">
       <Header title="Budgets">
         <BudgetsModal selectedThemes={budgets.map((budget) => budget.theme)} />
       </Header>

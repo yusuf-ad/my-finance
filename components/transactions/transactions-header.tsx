@@ -42,6 +42,7 @@ function TransactionsHeader() {
       {/* mobil */}
       <div className="flex md:hidden items-center">
         <FilterDropdown
+          mode={"sort"}
           options={[
             "Latest",
             "Oldest",
@@ -55,7 +56,10 @@ function TransactionsHeader() {
             <Sort className="w-5 h-5" />
           </button>
         </FilterDropdown>
-        <FilterDropdown options={["All Transactions", ...Categories]}>
+        <FilterDropdown
+          mode={"filter"}
+          options={["All Transactions", ...Categories]}
+        >
           <button className="p-2">
             <Filter className="w-5 h-5" />
           </button>

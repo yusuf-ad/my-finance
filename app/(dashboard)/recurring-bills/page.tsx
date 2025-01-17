@@ -25,6 +25,7 @@ function BillsPage() {
             <div className="flex items-center gap-2">
               <label className="text-gray-500 text-sm">Sort by</label>
               <FilterSelect
+                mode="sort"
                 options={[
                   "Latest",
                   "Oldest",

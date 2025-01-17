@@ -31,7 +31,14 @@ function FilterSelect({
 
   const handleFilter = (filter: string) => {
     const params = new URLSearchParams(searchParams.toString());
+
     params.set(mode, filter);
+
+    if (filter === "All") {
+      params.delete("filter");
+    } else {
+      params.set(mode, filter);
+    }
 
     router.replace(pathname + "?" + params.toString());
   };

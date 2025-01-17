@@ -15,14 +15,20 @@ import ActionsDropdown from "../actions-dropdown";
 async function TableContent({
   page,
   search,
+  sortBy,
+  filterBy,
 }: {
   page: number;
   search: string;
+  sortBy: string;
+  filterBy: string;
 }) {
   const response = await getTransactions({
     page,
     getBy: search,
     pageSize: page_size,
+    sortBy,
+    filterBy,
   });
 
   if (!response.success) {
@@ -73,9 +79,13 @@ async function TableContent({
 export default function TransactionsTable({
   page,
   search,
+  sortBy,
+  filterBy,
 }: {
   page: number;
   search: string;
+  sortBy: string;
+  filterBy: string;
 }) {
   return (
     <Table>
@@ -92,7 +102,12 @@ export default function TransactionsTable({
         fallback={<TableLoadingState />}
         key={`${page}-${search}`} // Key helps force remount on page/search change
       >
-        <TableContent page={page} search={search} />
+        <TableContent
+          page={page}
+          search={search}
+          sortBy={sortBy}
+          filterBy={filterBy}
+        />
       </Suspense>
     </Table>
   );

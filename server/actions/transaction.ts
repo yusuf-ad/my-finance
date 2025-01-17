@@ -23,7 +23,21 @@ export type NewTransaction = Omit<Transaction, "id">;
 import { unstable_cache } from "next/cache";
 
 const getCachedTransactions = unstable_cache(
-  async (userId: string, page: number, pageSize: number, getBy?: string) => {
+  async ({
+    userId,
+    page,
+    pageSize,
+    getBy,
+    sortBy,
+    filterBy,
+  }: {
+    userId: string;
+    page: number;
+    pageSize: number;
+    getBy?: string;
+    sortBy?: string;
+    filterBy?: string;
+  }) => {
     return await db
       .select()
       .from(transactionsTable)
@@ -33,7 +47,10 @@ const getCachedTransactions = unstable_cache(
       .where(
         and(
           eq(transactionsTable.userId, userId),
-          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined,
+          filterBy && filterBy !== "All"
+            ? eq(transactionsTable.category, filterBy)
+            : undefined
         )
       );
   },
@@ -84,10 +101,14 @@ export const getTransactions = async ({
   page = 1,
   pageSize = 10,
   getBy,
+  sortBy,
+  filterBy,
 }: {
   page?: number;
   pageSize?: number;
   getBy?: string;
+  sortBy?: string;
+  filterBy?: string;
 } = {}): Promise<
   | {
       success: true;
@@ -107,12 +128,14 @@ export const getTransactions = async ({
   }
 
   try {
-    const transactions = await getCachedTransactions(
-      session.session.userId,
+    const transactions = await getCachedTransactions({
       page,
       pageSize,
-      getBy
-    );
+      userId: session.session.userId,
+      getBy,
+      filterBy,
+      sortBy,
+    });
 
     const formattedTransactions = transactions.map((transaction) => ({
       ...transaction,

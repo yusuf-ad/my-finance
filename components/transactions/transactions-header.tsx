@@ -33,10 +33,7 @@ function TransactionsHeader() {
           <label className="text-gray-500 text-sm w-min xl:w-auto">
             Filter by Category
           </label>
-          <FilterSelect
-            mode="filter"
-            options={["All Transactions", ...Categories]}
-          />
+          <FilterSelect mode="filter" options={["All", ...Categories]} />
         </div>
       </div>
       {/* mobil */}
@@ -56,10 +53,7 @@ function TransactionsHeader() {
             <Sort className="w-5 h-5" />
           </button>
         </FilterDropdown>
-        <FilterDropdown
-          mode={"filter"}
-          options={["All Transactions", ...Categories]}
-        >
+        <FilterDropdown mode={"filter"} options={["All", ...Categories]}>
           <button className="p-2">
             <Filter className="w-5 h-5" />
           </button>

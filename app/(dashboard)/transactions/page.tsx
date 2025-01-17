@@ -11,7 +11,7 @@ async function TransactionsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { search, page } = await searchParams;
+  const { search, page, sort, filter } = await searchParams;
   const totalPages = await getTotalPages({
     getBy: search as string,
     pageSize: page_size,
@@ -29,6 +29,8 @@ async function TransactionsPage({
         <TransactionsTable
           page={parseInt(page as string, 10)}
           search={search as string}
+          sortBy={sort as string}
+          filterBy={filter as string}
         />
 
         <TablePagination totalPages={totalPages} />

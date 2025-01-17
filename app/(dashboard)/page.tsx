@@ -17,7 +17,7 @@ export default function HomePage() {
         <LogoutButton />
       </Header>
 
-      <Suspense fallback={<SkeletonBalance />}>
+      <Suspense fallback={<SkeletonBalance />} key={"balance-summary"}>
         <BalanceSummary />
       </Suspense>
 

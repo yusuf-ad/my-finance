@@ -36,6 +36,7 @@ function DashboardCard({
             <Loader2 className="animate-spin" size={32} />
           </div>
         }
+        key={title}
       >
         <div className="mt-4">{children}</div>
       </Suspense>

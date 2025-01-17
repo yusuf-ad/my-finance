@@ -1,3 +1,5 @@
+"use client";
+
 import Searchbar from "@/components/searchbar";
 import FilterSelect from "@/components/filter-select";
 import { Categories } from "@/lib/validations";
@@ -10,11 +12,13 @@ function TransactionsHeader() {
       <div className="flex-grow max-w-sm">
         <Searchbar />
       </div>
+
       {/* desktop */}
       <div className="md:flex hidden gap-2">
         <div className="flex items-center">
           <label className="text-gray-500 text-sm ">Sort by</label>
           <FilterSelect
+            mode="sort"
             options={[
               "Latest",
               "Oldest",
@@ -29,7 +33,10 @@ function TransactionsHeader() {
           <label className="text-gray-500 text-sm w-min xl:w-auto">
             Filter by Category
           </label>
-          <FilterSelect options={["All Transactions", ...Categories]} />
+          <FilterSelect
+            mode="filter"
+            options={["All Transactions", ...Categories]}
+          />
         </div>
       </div>
       {/* mobil */}

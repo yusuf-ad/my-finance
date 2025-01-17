@@ -15,19 +15,21 @@ function FilterSelect({
   options,
   triggerStyle,
   placeholder,
+  defaultValue,
 }: {
   mode: string;
   options: string[];
   triggerStyle?: string;
   placeholder?: string;
+  defaultValue?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const handleFilter = (filter: string) => {
-    console.log(filter);
+  const currentValue = searchParams.get(mode) || defaultValue || options[0];
 
+  const handleFilter = (filter: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(mode, filter);
 
@@ -35,7 +37,10 @@ function FilterSelect({
   };
 
   return (
-    <Select onValueChange={(value) => handleFilter(value)}>
+    <Select
+      defaultValue={currentValue}
+      onValueChange={(value) => handleFilter(value)}
+    >
       <SelectTrigger className={`w-[164px] ${triggerStyle}`}>
         <SelectValue placeholder={placeholder || options[0]} />
       </SelectTrigger>

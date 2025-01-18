@@ -4,10 +4,15 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
-import { and, asc, desc, eq, ilike } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { updateBalance } from "./balance";
+import {
+  getCachedLatestTransactions,
+  getCachedSpendings,
+  getCachedTotalPages,
+  getCachedTransactions,
+} from "./transactions.cache";
 
 export interface Transaction {
   id: number;
@@ -20,104 +25,6 @@ export interface Transaction {
 }
 
 export type NewTransaction = Omit<Transaction, "id">;
-import { unstable_cache } from "next/cache";
-
-const getCachedTransactions = unstable_cache(
-  async ({
-    userId,
-    page,
-    pageSize,
-    getBy,
-    sortBy,
-    filterBy,
-  }: {
-    userId: string;
-    page: number;
-    pageSize: number;
-    getBy?: string;
-    sortBy?: string;
-    filterBy?: string;
-  }) => {
-    const getOrderBy = () => {
-      switch (sortBy) {
-        case "Oldest":
-          return asc(transactionsTable.date);
-        case "Latest":
-          return desc(transactionsTable.date);
-
-        case "A to Z":
-          return asc(transactionsTable.name);
-        case "Z to A":
-          return desc(transactionsTable.name);
-
-        case "Highest":
-          return desc(transactionsTable.amount);
-        case "Lowest":
-          return asc(transactionsTable.amount);
-
-        default:
-          return desc(transactionsTable.date);
-      }
-    };
-
-    return await db
-      .select()
-      .from(transactionsTable)
-      .orderBy(getOrderBy())
-      .limit(pageSize)
-      .offset((page - 1) * pageSize)
-      .where(
-        and(
-          eq(transactionsTable.userId, userId),
-          getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined,
-          filterBy && filterBy !== "All"
-            ? eq(transactionsTable.category, filterBy)
-            : undefined
-        )
-      );
-  },
-  ["transactions"],
-  {
-    revalidate: 3600,
-    tags: ["transactions"],
-  }
-);
-
-const getCachedSpendings = unstable_cache(
-  async (userId: string, category: string) => {
-    const whereCondition =
-      category === "all"
-        ? eq(transactionsTable.userId, userId)
-        : and(
-            eq(transactionsTable.userId, userId),
-            eq(transactionsTable.category, category)
-          );
-
-    return await db.select().from(transactionsTable).where(whereCondition);
-  },
-  ["spendings"],
-  {
-    revalidate: 3600,
-    tags: ["transactions", "spendings"],
-  }
-);
-
-const getCachedTotalPages = unstable_cache(
-  async (userId: string, pageSize: number, getBy?: string) => {
-    return await db.$count(
-      transactionsTable,
-      and(
-        eq(transactionsTable.userId, userId),
-        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
-      )
-    );
-  },
-  ["transactionCount"],
-  {
-    revalidate: 3600,
-    tags: ["transactions"],
-  }
-);
 
 export const getTransactions = async ({
   page = 1,
@@ -306,12 +213,10 @@ export const getLatestTransactions = async (
   }
 
   try {
-    const transactions = await db
-      .select()
-      .from(transactionsTable)
-      .where(eq(transactionsTable.userId, session.session.userId))
-      .orderBy(desc(transactionsTable.id))
-      .limit(number);
+    const transactions = await getCachedLatestTransactions(
+      number,
+      session.session.userId
+    );
 
     const formattedTransactions = transactions.map((transaction) => ({
       ...transaction,

@@ -34,8 +34,8 @@ function FilterSelect({
 
     params.set(mode, filter);
 
-    if (filter === "All") {
-      params.delete("filter");
+    if (filter === options[0]) {
+      params.delete(mode);
     } else {
       params.set(mode, filter);
     }

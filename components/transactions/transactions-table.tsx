@@ -100,7 +100,7 @@ export default function TransactionsTable({
       </TableHeader>
       <Suspense
         fallback={<TableLoadingState />}
-        key={`${page}-${search}`} // Key helps force remount on page/search change
+        key={`${page}-${search}-${sortBy}-${filterBy}`} // Key helps force remount on page/search change
       >
         <TableContent
           page={page}

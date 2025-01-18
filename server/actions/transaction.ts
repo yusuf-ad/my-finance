@@ -4,7 +4,7 @@ import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
 import { revalidatePath } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
-import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
+import { and, asc, desc, eq, ilike } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { updateBalance } from "./balance";
@@ -38,10 +38,32 @@ const getCachedTransactions = unstable_cache(
     sortBy?: string;
     filterBy?: string;
   }) => {
+    const getOrderBy = () => {
+      switch (sortBy) {
+        case "Oldest":
+          return asc(transactionsTable.date);
+        case "Latest":
+          return desc(transactionsTable.date);
+
+        case "A to Z":
+          return asc(transactionsTable.name);
+        case "Z to A":
+          return desc(transactionsTable.name);
+
+        case "Highest":
+          return desc(transactionsTable.amount);
+        case "Lowest":
+          return asc(transactionsTable.amount);
+
+        default:
+          return desc(transactionsTable.date);
+      }
+    };
+
     return await db
       .select()
       .from(transactionsTable)
-      .orderBy(desc(transactionsTable.id))
+      .orderBy(getOrderBy())
       .limit(pageSize)
       .offset((page - 1) * pageSize)
       .where(

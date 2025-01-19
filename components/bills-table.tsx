@@ -64,7 +64,10 @@ async function TableContent({
             </TableCell>
           )}
           <TableCell className="text-right">
-            <ActionsDropdown options={["Edit", "Delete", "Mark as income"]} />
+            <ActionsDropdown
+              options={["Delete", "Mark as Income"]}
+              id={bill.id}
+            />
           </TableCell>
         </TableRow>
       ))}

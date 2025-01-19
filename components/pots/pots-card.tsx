@@ -1,4 +1,3 @@
-import { Dots } from "../icons";
 import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
 import AddMoneyModal from "../add-money-modal";

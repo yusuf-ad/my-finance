@@ -1,5 +1,6 @@
 "use server";
 
+// ===== Imports =====
 import { auth } from "@/lib/auth";
 import { PotsFormSchema, potsSchema } from "@/lib/validations";
 import { headers } from "next/headers";
@@ -9,6 +10,7 @@ import { potsTable } from "../db/schema";
 import { revalidatePath, unstable_cache } from "next/cache";
 import { getBalance, updateBalance } from "./balance";
 
+// ===== Types =====
 export interface Pot {
   id: number;
   name: string;
@@ -17,6 +19,7 @@ export interface Pot {
   totalSaved: number;
 }
 
+// ===== Cache Functions =====
 const getCachedPots = unstable_cache(
   async (userId: string) => {
     return await db
@@ -31,6 +34,7 @@ const getCachedPots = unstable_cache(
   }
 );
 
+// ===== Read Operations =====
 export const getPots = async (): Promise<
   { success: true; pots: Pot[] } | { success: false; message: string }
 > => {
@@ -51,6 +55,7 @@ export const getPots = async (): Promise<
   }
 };
 
+// ===== Write Operations =====
 export const createPot = async (newPot: PotsFormSchema) => {
   const isValid = potsSchema.safeParse(newPot);
 

@@ -1,5 +1,6 @@
 "use server";
 
+// ===== Imports =====
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db } from "../db/drizzle";
@@ -7,12 +8,14 @@ import { balanceTable, transactionsTable } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
+// ===== Types =====
 interface Balance {
   id: number;
   amount: number;
   updatedAt: Date;
 }
 
+// ===== Cache Functions =====
 const getCachedBalance = unstable_cache(
   async (userId: string) => {
     const [balance] = await db
@@ -42,6 +45,7 @@ const getCachedTransactions = unstable_cache(
   }
 );
 
+// ===== Read Operations =====
 export const getBalance = async (): Promise<
   | { success: true; balance: Balance; income: number; expenses: number }
   | { success: false; message: string }
@@ -96,6 +100,7 @@ export const getBalance = async (): Promise<
   }
 };
 
+// ===== Write Operations =====
 export const updateBalance = async ({ amount }: { amount: number }) => {
   const session = await auth.api.getSession({
     headers: await headers(),

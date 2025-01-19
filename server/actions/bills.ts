@@ -1,5 +1,6 @@
 "use server";
 
+// ===== Imports =====
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { transactionsTable } from "../db/schema";
@@ -8,6 +9,7 @@ import { and, asc, eq, ilike } from "drizzle-orm";
 import { Transaction } from "./transaction";
 import { unstable_cache } from "next/cache";
 
+// ===== Cache Functions =====
 const getCachedBills = unstable_cache(
   async (userId: string, page: number, pageSize: number, getBy?: string) => {
     return await db
@@ -31,6 +33,7 @@ const getCachedBills = unstable_cache(
   }
 );
 
+// ===== Read Operations =====
 export const getRecurringBills = async ({
   page = 1,
   pageSize = 10,

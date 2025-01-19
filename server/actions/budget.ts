@@ -1,5 +1,6 @@
 "use server";
 
+// ===== Imports =====
 import { auth } from "@/lib/auth";
 import { BudgetFormSchema, budgetSchema } from "@/lib/validations";
 import { headers } from "next/headers";
@@ -8,6 +9,7 @@ import { budgetsTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath, unstable_cache } from "next/cache";
 
+// ===== Types =====
 export interface Budget {
   id: number;
   category: string;
@@ -15,6 +17,7 @@ export interface Budget {
   theme: string;
 }
 
+// ===== Cache Functions =====
 const getCachedBudgets = unstable_cache(
   async (userId: string) => {
     return await db
@@ -29,6 +32,7 @@ const getCachedBudgets = unstable_cache(
   }
 );
 
+// ===== Read Operations =====
 export const getBudgets = async (): Promise<
   { success: true; budgets: Budget[] } | { success: false; message: string }
 > => {
@@ -48,6 +52,7 @@ export const getBudgets = async (): Promise<
   }
 };
 
+// ===== Write Operations =====
 export const createBudget = async (newBudget: BudgetFormSchema) => {
   const isValid = budgetSchema.safeParse(newBudget);
 

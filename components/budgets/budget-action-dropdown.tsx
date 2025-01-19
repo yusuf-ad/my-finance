@@ -9,15 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
-import {
-  deleteTransaction,
-  updateTransactionType,
-} from "@/server/actions/transaction";
-import { EllipsisVertical, Loader2 } from "lucide-react";
+import { deleteTransaction } from "@/server/actions/transaction";
+import { Loader2 } from "lucide-react";
+import { Dots } from "../icons";
+import { deleteBudget } from "@/server/actions/budget";
 
-type ActionType = "Delete" | "Mark as Income" | "Mark as Expense";
+type ActionType = "Delete";
 
-function ActionsDropdown({
+function BudgetActionsDropdown({
   id,
   options,
 }: {
@@ -31,20 +30,10 @@ function ActionsDropdown({
       setIsLoading(true);
       switch (action) {
         case "Delete":
-          await deleteTransaction(id);
+          await deleteBudget(id);
           toast({
             title: "Success",
-            description: "Transaction deleted successfully",
-          });
-          break;
-        case "Mark as Income":
-        case "Mark as Expense":
-          await updateTransactionType(id);
-          toast({
-            title: "Success",
-            description: `Transaction marked as ${
-              action === "Mark as Income" ? "income" : "expense"
-            }`,
+            description: "Budget deleted successfully",
           });
           break;
       }
@@ -65,11 +54,7 @@ function ActionsDropdown({
     <DropdownMenu>
       <DropdownMenuTrigger disabled={isLoading} asChild>
         <button className="text-gray-600 px-1 flex items-center ml-auto">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <EllipsisVertical />
-          )}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Dots />}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-min">
@@ -89,4 +74,4 @@ function ActionsDropdown({
   );
 }
 
-export default ActionsDropdown;
+export default BudgetActionsDropdown;

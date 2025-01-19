@@ -69,7 +69,7 @@ async function TableContent({
           )}
           <TableCell className="text-right">
             <ActionsDropdown
-              transaction={transaction}
+              id={transaction.id}
               options={[
                 "Delete",
                 `Mark as ${transaction.isIncome ? "Expense" : "Income"}`,

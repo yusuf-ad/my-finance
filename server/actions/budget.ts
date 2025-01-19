@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { budgetsTable } from "../db/schema";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 // ===== Types =====
 export interface Budget {
@@ -90,10 +90,37 @@ export const createBudget = async (newBudget: BudgetFormSchema) => {
       userId: session.session.userId,
     });
 
-    revalidatePath("/budgets");
+    revalidateTag("budgets");
 
     return { success: true, message: "Budget created successfully" };
   } catch {
     return { success: false, message: "Failed to create budget" };
+  }
+};
+
+export const deleteBudget = async (id: number) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    await db
+      .delete(budgetsTable)
+      .where(
+        and(
+          eq(budgetsTable.id, id),
+          eq(budgetsTable.userId, session.session.userId)
+        )
+      );
+
+    revalidateTag("budgets");
+
+    return { success: true, message: "Budget deleted successfully" };
+  } catch {
+    return { success: false, message: "Failed to delete budget" };
   }
 };

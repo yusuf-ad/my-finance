@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { CaretRight, Dots } from "../icons";
+import { CaretRight } from "../icons";
 import { Budget } from "@/server/actions/budget";
 import { parseTheme } from "@/lib/utils";
 import SpendingList from "../spending-list";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import BudgetStats from "./budget-stats";
+import BudgetActionsDropdown from "./budget-action-dropdown";
 
 function BudgetCard({ budget }: { budget: Budget }) {
   const { code } = parseTheme(budget.theme);
@@ -21,7 +22,7 @@ function BudgetCard({ budget }: { budget: Budget }) {
           <h3 className="text-gray-900 font-semibold">{budget.category} </h3>
         </div>
 
-        <Dots />
+        <BudgetActionsDropdown id={budget.id} options={["Delete"]} />
       </div>
 
       <p className="text-sm text-gray-500 my-4">

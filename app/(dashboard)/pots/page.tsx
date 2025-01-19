@@ -1,6 +1,6 @@
 import Header from "@/components/header";
-import PotsCard from "@/components/pots-card";
-import PotsModal from "@/components/pots-modal";
+import PotsCard from "@/components/pots/pots-card";
+import PotsModal from "@/components/pots/pots-modal";
 import { getPots } from "@/server/actions/pots";
 
 async function PotsPage() {

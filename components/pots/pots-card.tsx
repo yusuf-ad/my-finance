@@ -1,8 +1,8 @@
-import { Dots } from "./icons";
+import { Dots } from "../icons";
 import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
-import AddMoneyModal from "./add-money-modal";
-import WithdrawModal from "./withdraw-modal";
+import AddMoneyModal from "../add-money-modal";
+import WithdrawModal from "../withdraw-modal";
 
 function PotsCard({ pot }: { pot: Pot }) {
   const { code } = parseTheme(pot.theme);

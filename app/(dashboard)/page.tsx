@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Header from "@/components/header";
 import LogoutButton from "@/components/logout-button";
 import BalanceSummary from "@/components/balance-summary";
-import DashboardCard from "@/components/dashboard-card";
+import DashboardCard from "@/components/dashboard/dashboard-card";
 import SkeletonBalance from "@/components/skeletons/skeleton-balance";
 
 import PotsContent from "@/components/dashboard/pots-content";

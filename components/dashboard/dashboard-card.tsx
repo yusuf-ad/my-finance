@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CaretRight } from "./icons";
+import { CaretRight } from "../icons";
 import { ReactNode, Suspense } from "react";
 import { Loader2 } from "lucide-react";
 

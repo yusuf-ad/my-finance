@@ -3,6 +3,7 @@ import { Pot } from "@/server/actions/pots";
 import { parseTheme } from "@/lib/utils";
 import AddMoneyModal from "../add-money-modal";
 import WithdrawModal from "../withdraw-modal";
+import PotActionsDropdown from "./pot-actions-dropdown";
 
 function PotsCard({ pot }: { pot: Pot }) {
   const { code } = parseTheme(pot.theme);
@@ -17,7 +18,8 @@ function PotsCard({ pot }: { pot: Pot }) {
           ></div>
           <h3 className="text-gray-900 font-semibold">{pot.name} </h3>
         </div>
-        <Dots className="h-5 w-5 text-gray-500" />
+
+        <PotActionsDropdown id={pot.id} options={["Delete"]} />
       </div>
 
       <div className="space-y-4 my-8">

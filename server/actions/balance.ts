@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { balanceTable, transactionsTable } from "../db/schema";
 import { eq, sql } from "drizzle-orm";
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 // ===== Types =====
 interface Balance {
@@ -119,6 +119,8 @@ export const updateBalance = async ({ amount }: { amount: number }) => {
       })
       .where(eq(balanceTable.userId, session.session.userId));
 
+    revalidateTag("balance");
+
     return { success: true, balance };
   } catch {
     return {
@@ -143,6 +145,8 @@ export const createBalance = async (amount: number = 0) => {
       amount,
       updatedAt: sql`NOW()`,
     });
+
+    revalidateTag("balance");
 
     return { success: true, message: "Balance created" };
   } catch {

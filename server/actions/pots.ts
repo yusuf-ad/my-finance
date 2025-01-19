@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { and, eq } from "drizzle-orm";
 import { potsTable } from "../db/schema";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { getBalance, updateBalance } from "./balance";
 
 // ===== Types =====
@@ -94,7 +94,7 @@ export const createPot = async (newPot: PotsFormSchema) => {
       totalSaved: 0,
     });
 
-    revalidatePath("/pots");
+    revalidateTag("pots");
 
     return { success: true, message: "Pot created successfully" };
   } catch {
@@ -151,7 +151,7 @@ export const addMoney = async ({
 
     await updateBalance({ amount: amount * -1 });
 
-    revalidatePath("/pots");
+    revalidateTag("pots");
 
     return { success: true, message: "Money added successfully" };
   } catch {
@@ -207,10 +207,56 @@ export const withdrawMoney = async ({
       throw new Error("Failed to update balance");
     }
 
-    revalidatePath("/pots");
+    revalidateTag("pots");
+    revalidateTag("balance");
 
     return { success: true, message: "Money withdrawn successfully" };
   } catch {
     return { success: false, message: "Failed to withdraw money" };
+  }
+};
+
+export const deletePot = async (id: number) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    // Get pot data before deletion
+    const pot = await db
+      .select()
+      .from(potsTable)
+      .where(
+        and(eq(potsTable.id, id), eq(potsTable.userId, session.session.userId))
+      );
+
+    if (pot.length === 0) {
+      return { success: false, message: "Pot not found" };
+    }
+
+    // Add totalSaved back to balance
+    const balanceUpdate = await updateBalance({ amount: pot[0].totalSaved });
+
+    if (!balanceUpdate.success) {
+      throw new Error("Failed to update balance");
+    }
+
+    // Delete the pot
+    await db
+      .delete(potsTable)
+      .where(
+        and(eq(potsTable.id, id), eq(potsTable.userId, session.session.userId))
+      );
+
+    revalidateTag("pots");
+    revalidateTag("balance");
+
+    return { success: true, message: "Pot deleted successfully" };
+  } catch {
+    return { success: false, message: "Failed to delete pot" };
   }
 };

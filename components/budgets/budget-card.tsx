@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { CaretRight, Dots } from "./icons";
+import { CaretRight, Dots } from "../icons";
 import { Budget } from "@/server/actions/budget";
 import { parseTheme } from "@/lib/utils";
-import SpendingList from "./spending-list";
+import SpendingList from "../spending-list";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import BudgetStats from "./budget-stats";

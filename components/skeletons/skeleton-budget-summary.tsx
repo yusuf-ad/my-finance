@@ -1,6 +1,6 @@
 import { parseTheme } from "@/lib/utils";
 import { Budget } from "@/server/actions/budget";
-import BudgetsChart from "../budgets-chart";
+import BudgetsChart from "../budgets/budgets-chart";
 
 async function SkeletonBudgetSummary({ budgets }: { budgets: Budget[] }) {
   return (

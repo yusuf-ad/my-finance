@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Loader2, Plus } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import {
   BudgetFormSchema,
   budgetSchema,
@@ -23,12 +23,18 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 import { parseTheme } from "@/lib/utils";
 import { createBudget } from "@/server/actions/budget";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../ui/form";
 import clsx from "clsx";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";

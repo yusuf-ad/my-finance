@@ -1,6 +1,6 @@
 import { getBudgets } from "@/server/actions/budget";
 import { getSpendings } from "@/server/actions/transaction";
-import BudgetsChart from "@/components/budgets-chart";
+import BudgetsChart from "@/components/budgets/budgets-chart";
 import { parseTheme } from "@/lib/utils";
 
 export default async function BudgetsContent() {

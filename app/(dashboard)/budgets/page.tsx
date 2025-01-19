@@ -1,6 +1,6 @@
-import BudgetCard from "@/components/budget-card";
-import BudgetsModal from "@/components/budgets-modal";
-import BudgetsSummary from "@/components/budgets-summary";
+import BudgetCard from "@/components/budgets/budget-card";
+import BudgetsModal from "@/components/budgets/budgets-modal";
+import BudgetsSummary from "@/components/budgets/budgets-summary";
 import Header from "@/components/header";
 import SkeletonBudgetSummary from "@/components/skeletons/skeleton-budget-summary";
 import { getBudgets } from "@/server/actions/budget";

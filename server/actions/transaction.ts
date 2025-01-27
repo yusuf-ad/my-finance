@@ -3,7 +3,7 @@
 // ===== Imports =====
 import { db } from "@/server/db/drizzle";
 import { transactionsTable } from "../db/schema";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { newTransactionSchema } from "@/lib/validations";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -302,12 +302,12 @@ export const updateTransactionType = async (id: number) => {
       return { success: false, message: "Transaction not found" };
     }
 
-    // Update balance first
-    // If it was income, we subtract; if it was expense, we add
+    // Calculate the balance update amount based on the current transaction type
     const balanceUpdateAmount = transaction.isIncome
-      ? -transaction.amount
-      : transaction.amount;
+      ? -transaction.amount * 2 // Subtract the amount twice: once to reverse the income, once to add as expense
+      : transaction.amount * 2; // Add the amount twice: once to reverse the expense, once to add as income
 
+    // Update the balance
     const balanceResult = await updateBalance({
       amount: balanceUpdateAmount,
     });

@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { page_size } from "@/lib/constants";
-import ActionsDropdown from "./actions-dropdown";
+import ActionsDropdown from "../actions-dropdown";
 import { getRecurringBills } from "@/server/actions/bills";
 import { getOrdinalSuffix } from "@/lib/utils";
 import { Suspense } from "react";

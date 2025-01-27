@@ -1,5 +1,5 @@
 import { getRecurringBills } from "@/server/actions/bills";
-import { Receipt2 } from "./icons";
+import { Receipt2 } from "../icons";
 
 async function BillsSummary() {
   const response = await getRecurringBills();

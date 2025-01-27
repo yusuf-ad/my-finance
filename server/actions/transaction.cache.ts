@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { transactionsTable } from "../db/schema";
-import { and, asc, desc, eq, ilike } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray } from "drizzle-orm";
 import { db } from "../db/drizzle";
 
 export const getCachedTransactions = unstable_cache(
@@ -65,13 +65,16 @@ export const getCachedTransactions = unstable_cache(
 );
 
 export const getCachedSpendings = unstable_cache(
-  async (userId: string, category: string) => {
+  async (userId: string, categories: string[]) => {
     const whereCondition =
-      category === "all"
-        ? eq(transactionsTable.userId, userId)
+      categories.length === 0
+        ? and(
+            eq(transactionsTable.userId, userId),
+            eq(transactionsTable.isIncome, false)
+          )
         : and(
             eq(transactionsTable.userId, userId),
-            eq(transactionsTable.category, category),
+            inArray(transactionsTable.category, categories),
             eq(transactionsTable.isIncome, false)
           );
 

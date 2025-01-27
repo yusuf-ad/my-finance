@@ -6,7 +6,7 @@ import { parseTheme } from "@/lib/utils";
 export default async function BudgetsContent() {
   const [budgets, spendings] = await Promise.all([
     getBudgets(),
-    getSpendings({ category: "all" }),
+    getSpendings({ categories: [] }),
   ]);
 
   if (!budgets.success || !spendings.success) {

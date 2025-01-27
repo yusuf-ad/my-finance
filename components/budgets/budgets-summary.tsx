@@ -4,7 +4,8 @@ import BudgetsChart from "./budgets-chart";
 import { getSpendings } from "@/server/actions/transaction";
 
 async function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
-  const res = await getSpendings({ category: "all" });
+  const categories = budgets.map((budget) => budget.category);
+  const res = await getSpendings({ categories });
 
   if (!res.success) {
     return null;

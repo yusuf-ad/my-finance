@@ -9,7 +9,7 @@ async function BudgetStats({
   maxSpend: number;
   category: string;
 }) {
-  const res = await getSpendings({ category });
+  const res = await getSpendings({ categories: [category] });
 
   if (!res.success) {
     return null;

@@ -116,9 +116,9 @@ export const getLatestTransactions = async (
 };
 
 export const getSpendings = async ({
-  category,
+  categories,
 }: {
-  category: string;
+  categories: string[];
 }): Promise<
   | { success: true; spendings: Transaction[] }
   | { success: false; message: string }
@@ -134,7 +134,7 @@ export const getSpendings = async ({
   try {
     const spendings = await getCachedSpendings(
       session.session.userId,
-      category
+      categories
     );
 
     const formattedSpendings = spendings.map((spending) => ({

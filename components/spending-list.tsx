@@ -26,7 +26,7 @@ export function Spending({ spending }: { spending: Transaction }) {
 }
 
 async function SpendingList({ category }: { category: string }) {
-  const res = await getSpendings({ category: category });
+  const res = await getSpendings({ categories: [category] });
 
   if (!res.success) {
     return (

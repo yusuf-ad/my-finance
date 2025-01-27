@@ -154,9 +154,11 @@ export const getSpendings = async ({
 export const getTotalPages = async ({
   getBy,
   pageSize,
+  filterBy,
 }: {
   getBy?: string;
   pageSize: number;
+  filterBy?: string;
 }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -167,7 +169,11 @@ export const getTotalPages = async ({
   }
 
   try {
-    const totalRows = await getCachedTotalPages(session.session.userId, getBy);
+    const totalRows = await getCachedTotalPages(
+      session.session.userId,
+      getBy,
+      filterBy
+    );
 
     return Math.ceil(totalRows / pageSize);
   } catch {

@@ -15,7 +15,10 @@ async function TransactionsPage({
   const totalPages = await getTotalPages({
     getBy: search as string,
     pageSize: page_size,
+    filterBy: filter as string,
   });
+
+  console.log(totalPages);
 
   return (
     <div className="pb-28 lg:pb-10">

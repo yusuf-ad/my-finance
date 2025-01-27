@@ -88,12 +88,13 @@ export const getCachedSpendings = unstable_cache(
 );
 
 export const getCachedTotalPages = unstable_cache(
-  async (userId: string, getBy?: string) => {
+  async (userId: string, getBy?: string, filterBy?: string) => {
     return await db.$count(
       transactionsTable,
       and(
         eq(transactionsTable.userId, userId),
-        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined
+        getBy ? ilike(transactionsTable.name, `%${getBy}%`) : undefined,
+        filterBy ? eq(transactionsTable.category, filterBy) : undefined
       )
     );
   },

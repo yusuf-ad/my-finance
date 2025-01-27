@@ -12,10 +12,16 @@ import { toast } from "@/hooks/use-toast";
 import {
   deleteTransaction,
   updateTransactionType,
+  updateTransactionStatus,
 } from "@/server/actions/transaction";
 import { EllipsisVertical, Loader2 } from "lucide-react";
 
-type ActionType = "Delete" | "Mark as Income" | "Mark as Expense";
+type ActionType =
+  | "Delete"
+  | "Mark as Income"
+  | "Mark as Expense"
+  | "Mark as Recurring"
+  | "Unmark as Recurring";
 
 function ActionsDropdown({
   id,
@@ -45,6 +51,20 @@ function ActionsDropdown({
             description: `Transaction marked as ${
               action === "Mark as Income" ? "income" : "expense"
             }`,
+          });
+          break;
+        case "Mark as Recurring":
+          await updateTransactionStatus(id, true);
+          toast({
+            title: "Success",
+            description: "Transaction marked as recurring",
+          });
+          break;
+        case "Unmark as Recurring":
+          await updateTransactionStatus(id, false);
+          toast({
+            title: "Success",
+            description: "Transaction unmarked as recurring",
           });
           break;
       }

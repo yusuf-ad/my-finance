@@ -337,3 +337,55 @@ export const updateTransactionType = async (id: number) => {
     return { success: false, message: "Failed to update transaction type" };
   }
 };
+
+export const updateTransactionStatus = async (
+  id: number,
+  recurring: boolean
+) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    // First get the transaction details
+    const [transaction] = await db
+      .select()
+      .from(transactionsTable)
+      .where(
+        and(
+          eq(transactionsTable.id, id),
+          eq(transactionsTable.userId, session.session.userId)
+        )
+      );
+
+    if (!transaction) {
+      return { success: false, message: "Transaction not found" };
+    }
+
+    // Then update the transaction status
+    await db
+      .update(transactionsTable)
+      .set({
+        recurring,
+      })
+      .where(
+        and(
+          eq(transactionsTable.id, id),
+          eq(transactionsTable.userId, session.session.userId)
+        )
+      );
+
+    revalidateTag("transactions");
+
+    return {
+      success: true,
+      message: "Transaction status updated successfully",
+    };
+  } catch {
+    return { success: false, message: "Failed to update transaction status" };
+  }
+};

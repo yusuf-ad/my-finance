@@ -73,6 +73,7 @@ async function TableContent({
               options={[
                 "Delete",
                 `Mark as ${transaction.isIncome ? "Expense" : "Income"}`,
+                `${transaction.recurring ? "Unmark" : "Mark"} as Recurring`,
               ]}
             />
           </TableCell>

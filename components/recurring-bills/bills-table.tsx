@@ -68,7 +68,11 @@ async function TableContent({
           )}
           <TableCell className="text-right">
             <ActionsDropdown
-              options={["Delete", "Mark as Income"]}
+              options={[
+                "Delete",
+                "Mark as Income",
+                `${bill.recurring ? "Unmark" : "Mark"} as Recurring`,
+              ]}
               id={bill.id}
             />
           </TableCell>

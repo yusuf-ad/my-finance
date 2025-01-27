@@ -75,42 +75,49 @@ function TablePagination({ totalPages }: { totalPages: number }) {
           </Button>
         </PaginationItem>
 
-        <div className="flex items-center gap-2">
-          {activePage > 3 && (
-            <>
-              <PaginationItem>
-                <PaginationLink onClick={() => handlePageChange(1)} href="#">
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              {activePage > 4 && <PaginationEllipsis />}
-            </>
+        <>
+          {totalPages === 1 ? null : (
+            <div className="flex items-center gap-2">
+              {activePage > 3 && (
+                <>
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => handlePageChange(1)}
+                      href="#"
+                    >
+                      1
+                    </PaginationLink>
+                  </PaginationItem>
+                  {activePage > 4 && <PaginationEllipsis />}
+                </>
+              )}
+              {pages.map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page)}
+                    isActive={activePage === page}
+                    href="#"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              {totalPages > activePage + 2 && (
+                <>
+                  {activePage < totalPages - 3 && <PaginationEllipsis />}
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => handlePageChange(totalPages)}
+                      href="#"
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                </>
+              )}
+            </div>
           )}
-          {pages.map((page) => (
-            <PaginationItem key={page}>
-              <PaginationLink
-                onClick={() => handlePageChange(page)}
-                isActive={activePage === page}
-                href="#"
-              >
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          {totalPages > activePage + 2 && (
-            <>
-              {activePage < totalPages - 3 && <PaginationEllipsis />}
-              <PaginationItem>
-                <PaginationLink
-                  onClick={() => handlePageChange(totalPages)}
-                  href="#"
-                >
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            </>
-          )}
-        </div>
+        </>
 
         <PaginationItem>
           <Button

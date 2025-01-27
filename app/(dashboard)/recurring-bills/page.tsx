@@ -5,8 +5,20 @@ import SkeletonBillSummary from "@/components/skeletons/skeleton-bill-summary";
 import TablePagination from "@/components/table-pagination";
 import { Suspense } from "react";
 import BillsHeader from "@/components/recurring-bills/bills-header";
+import { getTotalBillsPage } from "@/server/actions/bills";
+import { page_size } from "@/lib/constants";
 
-function BillsPage() {
+async function BillsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { search, page, sort } = await searchParams;
+  const totalPages = await getTotalBillsPage({
+    getBy: search as string,
+    pageSize: page_size,
+  });
+
   return (
     <div className="pb-28 lg:pb-10">
       <Header title="Recurring Bills" />
@@ -19,9 +31,13 @@ function BillsPage() {
         <div className="bg-white w-full py-8 px-6 rounded-lg">
           <BillsHeader />
 
-          <BillsTable page={1} search="" />
+          <BillsTable
+            page={parseInt(page as string, 10)}
+            search={search as string}
+            sortBy={sort as string}
+          />
 
-          <TablePagination totalPages={0} />
+          <TablePagination totalPages={totalPages} />
         </div>
       </section>
     </div>

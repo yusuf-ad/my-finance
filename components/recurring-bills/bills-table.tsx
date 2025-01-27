@@ -16,14 +16,17 @@ import { Suspense } from "react";
 async function TableContent({
   page,
   search,
+  sortBy,
 }: {
   page: number;
   search: string;
+  sortBy: string;
 }) {
   const response = await getRecurringBills({
     page,
     getBy: search,
     pageSize: page_size,
+    sortBy,
   });
 
   if (!response.success) {
@@ -78,9 +81,11 @@ async function TableContent({
 export default function BillsTable({
   page,
   search,
+  sortBy,
 }: {
   page: number;
   search: string;
+  sortBy: string;
 }) {
   return (
     <Table>
@@ -96,7 +101,7 @@ export default function BillsTable({
         fallback={<TableLoadingState />}
         key={`${page}-${search}`} // Key helps force remount on page/search change
       >
-        <TableContent page={page} search={search} />
+        <TableContent page={page} search={search} sortBy={sortBy} />
       </Suspense>
     </Table>
   );

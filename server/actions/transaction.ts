@@ -167,11 +167,7 @@ export const getTotalPages = async ({
   }
 
   try {
-    const totalRows = await getCachedTotalPages(
-      session.session.userId,
-      pageSize,
-      getBy
-    );
+    const totalRows = await getCachedTotalPages(session.session.userId, getBy);
 
     return Math.ceil(totalRows / pageSize);
   } catch {

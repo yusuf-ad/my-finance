@@ -6,7 +6,7 @@ async function SkeletonBudgetSummary({ budgets }: { budgets: Budget[] }) {
   return (
     <div className="flex-1 lg:max-w-sm bg-white p-6 ">
       <div>
-        <BudgetsChart budgets={budgets} free={0} />
+        <BudgetsChart budgets={budgets} totalSpent={0} />
       </div>
 
       <h3 className="text-gray-900 font-semibold mb-2 tracking-wide">

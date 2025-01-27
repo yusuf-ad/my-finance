@@ -18,8 +18,6 @@ async function TransactionsPage({
     filterBy: filter as string,
   });
 
-  console.log(totalPages);
-
   return (
     <div className="pb-28 lg:pb-10">
       <Header title="Transactions">

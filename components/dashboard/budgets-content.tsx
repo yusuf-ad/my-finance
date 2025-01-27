@@ -23,19 +23,13 @@ export default async function BudgetsContent() {
   }
 
   const totalSpent = spendings.spendings.reduce((acc, spending) => {
-    return spending.isIncome ? 0 : acc - spending.amount;
+    return spending.isIncome ? 0 : acc + spending.amount;
   }, 0);
-
-  const totalIncome = spendings.spendings.reduce((acc, spending) => {
-    return spending.isIncome ? acc + spending.amount : acc;
-  }, 0);
-
-  const freeBudget = totalSpent + totalIncome;
 
   return (
     <div className="flex items-center gap-4">
       <div className="h-full w-full">
-        <BudgetsChart budgets={budgets.budgets} free={freeBudget} />
+        <BudgetsChart budgets={budgets.budgets} totalSpent={totalSpent} />
       </div>
 
       <ul className="space-y-2">
@@ -49,13 +43,6 @@ export default async function BudgetsContent() {
             return spending.isIncome ? 0 : acc - spending.amount;
           }, 0);
 
-          const totalIncome = categorizedSpendings.reduce((acc, spending) => {
-            return spending.isIncome ? acc + spending.amount : acc;
-          }, 0);
-
-          const free =
-            totalIncome + totalSpent >= 0 ? 0 : totalIncome + totalSpent;
-
           return (
             <li key={budget.id} className="flex items-center gap-4">
               <div
@@ -64,7 +51,7 @@ export default async function BudgetsContent() {
               ></div>
               <div className="flex flex-col font-semibold text-xs gap-1 items-start">
                 <span className="text-gray-600">{budget.category}</span>
-                <span className="font-bold">${free.toFixed(2)}</span>
+                <span className="font-bold">${totalSpent.toFixed(2)}</span>
               </div>
             </li>
           );

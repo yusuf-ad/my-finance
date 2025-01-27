@@ -42,6 +42,7 @@ async function SpendingList({ category }: { category: string }) {
 
   return (
     <div>
+      {/* display the last 4 transactions */}
       {spendings.length > 0 ? (
         <ul>
           {spendings

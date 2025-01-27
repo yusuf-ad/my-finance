@@ -44,9 +44,12 @@ async function SpendingList({ category }: { category: string }) {
     <div>
       {spendings.length > 0 ? (
         <ul>
-          {spendings.slice(0, 4).map((spending) => (
-            <Spending spending={spending} key={spending.id} />
-          ))}
+          {spendings
+            .slice(-4)
+            .reverse()
+            .map((spending) => (
+              <Spending spending={spending} key={spending.id} />
+            ))}
         </ul>
       ) : (
         <p className="text-center mt-4 text-gray-500 text-sm">

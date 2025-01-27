@@ -71,7 +71,8 @@ export const getCachedSpendings = unstable_cache(
         ? eq(transactionsTable.userId, userId)
         : and(
             eq(transactionsTable.userId, userId),
-            eq(transactionsTable.category, category)
+            eq(transactionsTable.category, category),
+            eq(transactionsTable.isIncome, false)
           );
 
     return await db.select().from(transactionsTable).where(whereCondition);

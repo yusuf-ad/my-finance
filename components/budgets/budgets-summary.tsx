@@ -13,19 +13,13 @@ async function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
   const { spendings } = res;
 
   const totalSpent = spendings.reduce((acc, spending) => {
-    return spending.isIncome ? 0 : acc - spending.amount;
+    return spending.isIncome ? 0 : acc + spending.amount;
   }, 0);
-
-  const totalIncome = spendings.reduce((acc, spending) => {
-    return spending.isIncome ? acc + spending.amount : acc;
-  }, 0);
-
-  const freeBudget = totalSpent + totalIncome;
 
   return (
     <div className="flex-1 lg:max-w-sm bg-white p-6 ">
       <div>
-        <BudgetsChart budgets={budgets} free={freeBudget} />
+        <BudgetsChart budgets={budgets} totalSpent={totalSpent} />
       </div>
 
       <h3 className="text-gray-900 font-semibold mb-2 tracking-wide">
@@ -43,13 +37,6 @@ async function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
             return spending.isIncome ? 0 : acc - spending.amount;
           }, 0);
 
-          const totalIncome = categorizedSpendings.reduce((acc, spending) => {
-            return spending.isIncome ? acc + spending.amount : acc;
-          }, 0);
-
-          const free =
-            totalIncome + totalSpent >= 0 ? 0 : totalIncome + totalSpent;
-
           return (
             <li
               key={budget.id}
@@ -65,7 +52,7 @@ async function BudgetsSummary({ budgets }: { budgets: Budget[] }) {
                 </h4>
               </div>
               <p className="font-semibold">
-                ${Math.abs(free).toFixed(2)}{" "}
+                ${Math.abs(totalSpent).toFixed(2)}{" "}
                 <span className="text-gray-400 font-medium text-sm">
                   of ${budget.maxSpend.toFixed(2)}
                 </span>

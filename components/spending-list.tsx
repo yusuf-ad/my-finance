@@ -44,7 +44,7 @@ async function SpendingList({ category }: { category: string }) {
     <div>
       {spendings.length > 0 ? (
         <ul>
-          {spendings.map((spending) => (
+          {spendings.slice(0, 4).map((spending) => (
             <Spending spending={spending} key={spending.id} />
           ))}
         </ul>

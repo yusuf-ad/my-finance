@@ -18,21 +18,17 @@ async function BudgetStats({
   const { spendings } = res;
 
   const totalSpent = spendings.reduce((acc, spending) => {
-    return spending.isIncome ? 0 : acc - spending.amount;
+    return spending.isIncome ? 0 : acc + spending.amount;
   }, 0);
 
-  const totalIncome = spendings.reduce((acc, spending) => {
-    return spending.isIncome ? acc + spending.amount : acc;
-  }, 0);
-
-  const freeBudget = maxSpend + totalSpent + totalIncome;
+  const freeBudget = maxSpend - totalSpent > 0 ? maxSpend - totalSpent : 0;
 
   return (
     <>
       <div>
         <div className="h-6 bg-lightBeige rounded-sm">
           <div
-            className="h-6  rounded-sm"
+            className="h-6 rounded-sm"
             style={{
               width: `${
                 freeBudget - maxSpend > 0

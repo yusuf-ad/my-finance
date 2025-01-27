@@ -16,7 +16,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function BudgetsChart({ budgets, free }: { budgets: Budget[]; free: number }) {
+function BudgetsChart({
+  budgets,
+  totalSpent,
+}: {
+  budgets: Budget[];
+  totalSpent: number;
+}) {
   const chartData = useMemo(() => {
     return budgets.map((budget) => {
       const [color, code] = budget.theme.split("#");
@@ -64,7 +70,7 @@ function BudgetsChart({ budgets, free }: { budgets: Budget[]; free: number }) {
                       y={viewBox.cy}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      ${free}
+                      ${totalSpent}
                     </tspan>
                     <tspan
                       x={viewBox.cx}

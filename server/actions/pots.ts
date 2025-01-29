@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { db } from "../db/drizzle";
 import { and, eq } from "drizzle-orm";
 import { potsTable } from "../db/schema";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { getBalance, updateBalance } from "./balance";
 
 // ===== Types =====

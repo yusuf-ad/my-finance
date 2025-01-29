@@ -3,7 +3,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Login",
+  title: "Login | My Finance",
+  description:
+    "Welcome back! Login to your My Finance account to continue managing your personal finances.",
 };
 
 function LoginPage() {

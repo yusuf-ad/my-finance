@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${publicSans.className} antialiased bg-lightBeige`}>
+      <body
+        className={`${publicSans.className} antialiased bg-lightBeige selection:bg-orange-400 selection:text-white`}
+      >
         {children}
 
         <Toaster />

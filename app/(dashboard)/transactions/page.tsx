@@ -5,6 +5,13 @@ import TransactionsModal from "@/components/transactions/transactions-modal";
 import TransactionsTable from "@/components/transactions/transactions-table";
 import { page_size } from "@/lib/constants";
 import { getTotalPages } from "@/server/actions/transaction";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Transactions",
+  description:
+    "Manage and review all your financial transactions. Track income, expenses, and recurring payments efficiently with My Finance.",
+};
 
 async function TransactionsPage({
   searchParams,

@@ -7,6 +7,13 @@ import { Suspense } from "react";
 import BillsHeader from "@/components/recurring-bills/bills-header";
 import { getTotalBillsPage } from "@/server/actions/bills";
 import { page_size } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Recurring Bills",
+  description:
+    "Create, manage, and track your savings pots effortlessly. Set financial goals, allocate funds, and watch your savings grow with My Finance's comprehensive pot management tools.",
+};
 
 async function BillsPage({
   searchParams,

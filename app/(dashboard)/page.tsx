@@ -9,6 +9,13 @@ import PotsContent from "@/components/dashboard/pots-content";
 import TransactionsContent from "@/components/dashboard/transactions-content";
 import BudgetsContent from "@/components/dashboard/budgets-content";
 import BillsContent from "@/components/dashboard/bills-content";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description:
+    "View your financial overview, track expenses, and manage your budgets all in one place.",
+};
 
 export default function HomePage() {
   return (

@@ -4,7 +4,14 @@ import BudgetsSummary from "@/components/budgets/budgets-summary";
 import Header from "@/components/header";
 import SkeletonBudgetSummary from "@/components/skeletons/skeleton-budget-summary";
 import { getBudgets } from "@/server/actions/budget";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Budgets",
+  description:
+    "Create, manage, and track your budgets effortlessly. Set financial goals, monitor your expenses, and stay on top of your spending with My Finance's comprehensive budgeting tools.",
+};
 
 async function BudgetsPage() {
   const res = await getBudgets();

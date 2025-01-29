@@ -2,6 +2,13 @@ import Header from "@/components/header";
 import PotsCard from "@/components/pots/pots-card";
 import PotsModal from "@/components/pots/pots-modal";
 import { getPots } from "@/server/actions/pots";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pots",
+  description:
+    "Create, manage, and track your savings pots effortlessly. Set financial goals, allocate funds, and watch your savings grow with My Finance's comprehensive pot management tools.",
+};
 
 async function PotsPage() {
   const res = await getPots();

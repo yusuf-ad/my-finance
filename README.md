@@ -1,8 +1,8 @@
-# My Finance App 🚀
+# My Finance App 📝
 
 Personal Finance App is a modern full-stack web application developed as part of a challenge on [Frontend Mentor](https://www.frontendmentor.io/challenges/personal-finance-app-JfjtZgyMt1). The app provides an intuitive platform for users to manage their budgets by categorizing expenses as negative and incomes as positive values, ensuring a clear and efficient financial overview. Through this project, I learned how to effectively use Next.js Server Actions, implement caching, and manage loading states in Next.js.
 
-## Key Features 🌟
+## Key Features 🗝️
 
 - **Expense and Income Management**: Record expenses as negative values and
   incomes as positive values for easy budget tracking.
@@ -49,7 +49,7 @@ To run this project on your local machine, follow these steps:
 2. **Install dependencies:**
 
    ```bash
-   npm install
+   npm install --force
    ```
 
 3. **Set up environment variables:**

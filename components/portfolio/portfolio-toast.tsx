@@ -12,7 +12,7 @@ function PortfolioToast() {
       description: "Check out his GitHub and LinkedIn",
       action: (
         <ToastAction altText="See GitHub">
-          <Link href={"https://github.com/yusuf-ad/my-finance"}>
+          <Link target="_blank" href={"https://github.com/yusuf-ad/my-finance"}>
             See GitHub
           </Link>
         </ToastAction>

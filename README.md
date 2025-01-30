@@ -49,7 +49,7 @@ To run this project on your local machine, follow these steps:
 2. **Install dependencies:**
 
    ```bash
-   npm install
+   npm install --force
    ```
 
 3. **Set up environment variables:**

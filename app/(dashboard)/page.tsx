@@ -10,6 +10,7 @@ import TransactionsContent from "@/components/dashboard/transactions-content";
 import BudgetsContent from "@/components/dashboard/budgets-content";
 import BillsContent from "@/components/dashboard/bills-content";
 import { Metadata } from "next";
+import PortfolioToast from "@/components/portfolio/portfolio-toast";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -20,6 +21,9 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="pb-28 lg:pb-10">
+      {/* Show portfolio toast */}
+      <PortfolioToast />
+
       <Header title="Overview">
         <LogoutButton />
       </Header>

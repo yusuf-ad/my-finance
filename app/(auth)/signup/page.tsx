@@ -1,5 +1,5 @@
 import SignupForm from "@/components/signup/signup-form";
-import { PortfolioInfo } from "@/components/portfolio-info";
+import { PortfolioInfo } from "@/components/portfolio/portfolio-info";
 import { Metadata } from "next";
 import Link from "next/link";
 
